@@ -1,0 +1,236 @@
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { FiExternalLink, FiGithub, FiX } from 'react-icons/fi'
+
+const projects = [
+  {
+    id: 'packet-analyzer',
+    title: 'Network Packet Analyzer',
+    description:
+      'A Java-based tool for inspecting and analyzing network packets, helping understand protocols and low-level data flow.',
+    tech: ['Java', 'Sockets', 'Networking'],
+    github: 'https://github.com/your-username/packet-analyzer',
+    demo: '#',
+    images: ['/previews/packet-1.png', '/previews/packet-2.png'],
+  },
+  {
+    id: 'backend-api',
+    title: 'Clean Backend API',
+    description:
+      'REST API with layered architecture, input validation, and clear separation of concerns for maintainable backend services.',
+    tech: ['Java', 'REST', 'Design Patterns'],
+    github: 'https://github.com/your-username/backend-api',
+    demo: '#',
+    images: ['/previews/backend-1.png', '/previews/backend-2.png'],
+  },
+  {
+    id: 'dsa-visualizer',
+    title: 'DSA Visualizer',
+    description:
+      'Interactive visualizations for data structures and algorithms to build deeper intuition while solving problems.',
+    tech: ['JavaScript', 'HTML', 'CSS'],
+    github: 'https://github.com/your-username/dsa-visualizer',
+    demo: '#',
+    images: ['/previews/dsa-1.png', '/previews/dsa-2.png'],
+  },
+]
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: 0.1 * i, duration: 0.4, ease: 'easeOut' },
+  }),
+}
+
+export function Projects() {
+  const [active, setActive] = useState(null)
+  const [imageIndex, setImageIndex] = useState(0)
+
+  const openModal = (project) => {
+    setActive(project)
+    setImageIndex(0)
+  }
+
+  const closeModal = () => {
+    setActive(null)
+  }
+
+  const nextImage = () => {
+    if (!active) return
+    setImageIndex((prev) => (prev + 1) % active.images.length)
+  }
+
+  return (
+    <section
+      id="projects"
+      className="flex min-h-screen snap-start items-center bg-gradient-to-b from-surface-light to-slate-100 px-4 py-24 dark:from-slate-950 dark:to-slate-900"
+      aria-label="Projects"
+    >
+      <div className="mx-auto flex max-w-6xl flex-col gap-8">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">
+              Projects
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-50">
+              Selected work with a backend mindset.
+            </h2>
+            <p className="max-w-xl text-sm text-slate-600 dark:text-slate-300">
+              A mix of systems-oriented projects and learning experiments that focus on clarity,
+              structure, and performance.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          {projects.map((project, index) => (
+            <motion.article
+              key={project.id}
+              custom={index}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-900/5 bg-white/80 shadow-sm shadow-slate-900/5 backdrop-blur transition hover:-translate-y-2 hover:shadow-lg hover:shadow-slate-900/10 dark:border-slate-50/10 dark:bg-slate-900/80"
+              onClick={() => openModal(project)}
+            >
+              <div className="relative h-40 overflow-hidden bg-slate-200/60 dark:bg-slate-800/60">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  className="flex h-full items-center justify-center text-xs font-medium uppercase tracking-[0.25em] text-slate-500 dark:text-slate-300"
+                >
+                  Project Preview
+                </motion.div>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-transparent" />
+              </div>
+              <div className="flex flex-1 flex-col gap-3 p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+                    {project.title}
+                  </h3>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-300">
+                  {project.description}
+                </p>
+                <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-1">
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.tech.map((tech) => (
+                      <span
+                        key={tech}
+                        className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-200"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-2 text-slate-400">
+                    <FiGithub aria-hidden="true" />
+                    <FiExternalLink aria-hidden="true" />
+                  </div>
+                </div>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 backdrop-blur"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            aria-modal="true"
+            role="dialog"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 24, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.98 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="relative max-h-[80vh] w-full max-w-3xl overflow-hidden rounded-3xl border border-slate-50/10 bg-slate-900/90 p-5 shadow-2xl"
+            >
+              <button
+                type="button"
+                onClick={closeModal}
+                className="absolute right-4 top-4 rounded-full border border-slate-50/10 bg-slate-900/80 p-1.5 text-slate-300 hover:text-white"
+                aria-label="Close project details"
+              >
+                <FiX size={16} />
+              </button>
+
+              <div className="flex flex-col gap-5 md:flex-row">
+                <div className="md:w-2/3">
+                  <div className="relative h-52 overflow-hidden rounded-2xl bg-slate-800">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-accent/40 via-sky-500/20 to-emerald-400/20" />
+                    <div className="relative flex h-full items-center justify-center text-xs font-medium uppercase tracking-[0.25em] text-slate-100">
+                      Image {imageIndex + 1} / {active.images.length}
+                    </div>
+                  </div>
+                  {active.images.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={nextImage}
+                      className="mt-3 text-xs font-medium text-slate-300 underline-offset-4 hover:underline"
+                    >
+                      Next preview
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex-1 space-y-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">
+                    Project
+                  </p>
+                  <h3 className="text-lg font-semibold text-white">{active.title}</h3>
+                  <p className="text-xs text-slate-300">{active.description}</p>
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400">
+                      Tech Breakdown
+                    </p>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {active.tech.map((tech) => (
+                        <span
+                          key={tech}
+                          className="rounded-full bg-slate-800 px-3 py-1 text-[10px] font-medium text-slate-100"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 pt-2 text-xs font-medium">
+                    <a
+                      href={active.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 rounded-full bg-slate-800 px-3 py-1.5 text-slate-100 hover:bg-slate-700"
+                    >
+                      <FiGithub size={14} />
+                      GitHub
+                    </a>
+                    <a
+                      href={active.demo}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1.5 text-slate-900 hover:bg-slate-100"
+                    >
+                      <FiExternalLink size={14} />
+                      Live Demo
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  )
+}
+
