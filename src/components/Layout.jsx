@@ -5,7 +5,7 @@ import { Navbar } from './Navbar'
 import { Sidebar } from './Sidebar'
 import { Footer } from './Footer'
 import { useTheme } from '../hooks/useTheme'
-import { useActiveSection } from '../hooks/useActiveSection'
+import { useActiveSectionForSidebar } from '../hooks/useActiveSectionForSidebar'
 
 const pageVariants = {
   initial: { opacity: 0, y: 16 },
@@ -25,12 +25,9 @@ export function Layout() {
   const { theme, toggleTheme } = useTheme()
   const location = useLocation()
   const isHomePage = location.pathname === '/'
-  const { activeSection, sectionIds, scrollToSection } = useActiveSection({
+  const { activeSection, sectionIds, handleSidebarSectionClick } = useActiveSectionForSidebar({
     enabled: isHomePage,
-    rootId: 'scroll-root',
     threshold: 0.6,
-    rootMargin: '-40% 0px -40% 0px',
-    debounceMs: 80,
   })
 
   // Scroll to top on route change
@@ -46,7 +43,7 @@ export function Layout() {
       <Sidebar
         activeSection={activeSection}
         sectionIds={sectionIds}
-        onSectionClick={scrollToSection}
+        onSectionClick={handleSidebarSectionClick}
       />
 
       <div className="mt-16 flex-1">

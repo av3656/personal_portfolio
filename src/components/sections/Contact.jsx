@@ -1,30 +1,77 @@
-import { motion } from 'framer-motion'
-import { FiGithub, FiLinkedin, FiInstagram, FiTwitter } from 'react-icons/fi'
+import { useState } from 'react'
+import emailjs from '@emailjs/browser'
+import { AnimatePresence, motion } from 'framer-motion'
+import { FiGithub, FiLinkedin, FiInstagram } from 'react-icons/fi'
+import { FaXTwitter } from 'react-icons/fa6'
 
 const socials = [
   {
     label: 'GitHub',
-    href: 'https://github.com/your-username',
+    href: 'https://github.com/av3656',
     icon: FiGithub,
   },
   {
     label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/your-handle',
+    href: 'https://www.linkedin.com/in/amanvermaavr0001',
     icon: FiLinkedin,
   },
   {
     label: 'Instagram',
-    href: 'https://www.instagram.com/your-handle',
+    href: 'https://www.instagram.com/carpediem_aman_',
     icon: FiInstagram,
   },
   {
-    label: 'Twitter',
-    href: 'https://twitter.com/your-handle',
-    icon: FiTwitter,
+    label: 'X',
+    href: 'https://x.com/carpediem_aman',
+    icon: FaXTwitter,
   },
 ]
 
 export function Contact() {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [github, setGithub] = useState('')
+  const [message, setMessage] = useState('')
+
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    setLoading(true)
+    setSuccess(false)
+    setError(false)
+
+    const githubLink = github.startsWith('http') ? github : `https://github.com/${github}`
+
+    try {
+      await emailjs.send(
+        'service_zwajs2k',
+        'template_1h0irdb',
+        {
+          name,
+          email,
+          github: githubLink,
+          message,
+        },
+        'e9N8MhJBf60vznEmS',
+      )
+
+      setSuccess(true)
+      setName('')
+      setEmail('')
+      setGithub('')
+      setMessage('')
+    } catch (err) {
+      console.error(err)
+      setError(true)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <section
       id="contact"
@@ -69,9 +116,7 @@ export function Contact() {
         >
           <form
             className="space-y-4"
-            onSubmit={(e) => {
-              e.preventDefault()
-            }}
+            onSubmit={handleSubmit}
           >
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
@@ -88,6 +133,8 @@ export function Contact() {
                   autoComplete="name"
                   className="mt-1 w-full rounded-xl border border-slate-900/10 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-accent/40 placeholder:text-slate-400 focus:border-accent focus:ring-2 dark:border-slate-50/15 dark:bg-slate-900 dark:text-slate-50"
                   placeholder="Your name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   required
                 />
               </div>
@@ -105,9 +152,30 @@ export function Contact() {
                   autoComplete="email"
                   className="mt-1 w-full rounded-xl border border-slate-900/10 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-accent/40 placeholder:text-slate-400 focus:border-accent focus:ring-2 dark:border-slate-50/15 dark:bg-slate-900 dark:text-slate-50"
                   placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="github"
+                className="block text-xs font-medium text-slate-600 dark:text-slate-200"
+              >
+                GitHub ID
+              </label>
+              <input
+                id="github"
+                name="github"
+                type="text"
+                className="mt-1 w-full rounded-xl border border-slate-900/10 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-accent/40 placeholder:text-slate-400 focus:border-accent focus:ring-2 dark:border-slate-50/15 dark:bg-slate-900 dark:text-slate-50"
+                placeholder="your-github-username or profile link"
+                value={github}
+                onChange={(e) => setGithub(e.target.value)}
+                required
+              />
             </div>
 
             <div>
@@ -123,6 +191,8 @@ export function Contact() {
                 rows={4}
                 className="mt-1 w-full rounded-xl border border-slate-900/10 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-accent/40 placeholder:text-slate-400 focus:border-accent focus:ring-2 dark:border-slate-50/15 dark:bg-slate-900 dark:text-slate-50"
                 placeholder="Tell me about your project or opportunity..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
                 required
               />
             </div>
@@ -131,14 +201,41 @@ export function Contact() {
               type="submit"
               whileHover={{ y: -2 }}
               whileTap={{ y: 0, scale: 0.98 }}
-              className="inline-flex w-full items-center justify-center rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light dark:focus-visible:ring-offset-slate-950 sm:w-auto"
+              disabled={loading}
+              className="inline-flex w-full items-center justify-center rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light disabled:cursor-not-allowed disabled:opacity-70 dark:focus-visible:ring-offset-slate-950 sm:w-auto"
             >
-              Send Message
+              {loading ? 'Sending...' : 'Send Message'}
             </motion.button>
+
+            <AnimatePresence mode="wait">
+              {success && (
+                <motion.p
+                  key="success"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  className="text-xs font-medium text-emerald-600 dark:text-emerald-400"
+                >
+                  Message sent successfully. I will get back to you soon.
+                </motion.p>
+              )}
+              {error && (
+                <motion.p
+                  key="error"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  className="text-xs font-medium text-red-600 dark:text-red-400"
+                >
+                  Something went wrong. Please try again.
+                </motion.p>
+              )}
+            </AnimatePresence>
           </form>
         </motion.div>
       </div>
     </section>
   )
 }
-
