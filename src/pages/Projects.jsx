@@ -21,7 +21,7 @@ export function ProjectsPage() {
   usePageMeta('Projects', 'Detailed project portfolio focused on backend systems and clean engineering.')
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-b from-surface-light to-slate-100 px-4 py-24 dark:from-slate-950 dark:to-slate-900">
+    <section className="relative min-h-screen bg-gradient-to-b from-ai-navy to-ai-surface px-4 py-24 dark:from-ai-navy dark:to-ai-surface">
       <div className="mx-auto flex max-w-6xl flex-col gap-10">
         <motion.header
           initial={{ opacity: 0, y: 18 }}
@@ -30,10 +30,10 @@ export function ProjectsPage() {
           className="space-y-4"
         >
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">Projects</p>
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl dark:text-slate-50">
+          <h1 className="text-3xl font-semibold tracking-tight text-ai-text-primary sm:text-4xl dark:text-ai-text-primary">
             Projects with clear engineering decisions.
           </h1>
-          <p className="max-w-2xl text-sm text-slate-600 dark:text-slate-300">
+          <p className="max-w-2xl text-sm text-ai-text-secondary dark:text-ai-text-secondary">
             Beyond screenshots, this page emphasizes why each system was built the way it was, what
             problem it solves, and what I learned during implementation.
           </p>
@@ -46,10 +46,10 @@ export function ProjectsPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.08, duration: 0.4 }}
-              className="rounded-2xl border border-slate-900/5 bg-white/80 p-5 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-slate-50/10 dark:bg-slate-900/80"
+              className="rounded-2xl border border-ai-border bg-ai-card/80 p-5 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-ai-border dark:bg-ai-card/80"
             >
-              <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-50">{item.title}</h2>
-              <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300">{item.body}</p>
+              <h2 className="text-sm font-semibold text-ai-text-primary dark:text-ai-text-primary">{item.title}</h2>
+              <p className="mt-2 text-xs leading-relaxed text-ai-text-secondary dark:text-ai-text-secondary">{item.body}</p>
             </motion.article>
           ))}
         </div>

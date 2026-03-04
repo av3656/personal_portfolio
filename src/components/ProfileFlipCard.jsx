@@ -44,7 +44,7 @@ export function ProfileFlipCard() {
         style={{ transformStyle: 'preserve-3d' }}
       >
         <div
-          className="absolute inset-0 overflow-hidden rounded-2xl border border-slate-900/10 bg-white/70 p-4 shadow-2xl shadow-sky-500/10 backdrop-blur dark:border-slate-50/10 dark:bg-slate-900/80"
+          className="absolute inset-0 overflow-hidden rounded-2xl border border-ai-border bg-ai-card/70 p-4 shadow-2xl shadow-sky-500/10 backdrop-blur dark:border-ai-border dark:bg-ai-card/80"
           style={{
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
@@ -65,7 +65,7 @@ export function ProfileFlipCard() {
         </div>
 
         <div
-          className="absolute inset-0 overflow-hidden rounded-2xl border border-slate-900/10 bg-white/70 p-4 shadow-2xl shadow-sky-500/10 backdrop-blur dark:border-slate-50/10 dark:bg-slate-900/80"
+          className="absolute inset-0 overflow-hidden rounded-2xl border border-ai-border bg-ai-card/70 p-4 shadow-2xl shadow-sky-500/10 backdrop-blur dark:border-ai-border dark:bg-ai-card/80"
           style={{
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
@@ -74,13 +74,13 @@ export function ProfileFlipCard() {
         >
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/20 via-sky-400/10 to-emerald-300/10" />
           <div className="relative flex h-full flex-col justify-between">
-            <div className="space-y-1 text-xs text-slate-500 dark:text-slate-300">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">
+            <div className="space-y-1 text-xs text-ai-text-secondary dark:text-ai-text-secondary">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-ai-text-secondary dark:text-ai-text-secondary">
                 Focus
               </p>
-              <p className="text-sm font-semibold text-slate-900 dark:text-slate-50">Java · Backend · Cloud</p>
+              <p className="text-sm font-semibold text-ai-text-primary dark:text-ai-text-primary">Java · Backend · Cloud</p>
             </div>
-            <div className="space-y-2 text-xs text-slate-500 dark:text-slate-300">
+            <div className="space-y-2 text-xs text-ai-text-secondary dark:text-ai-text-secondary">
               <p>Currently learning:</p>
               <ul className="list-disc space-y-1 pl-4">
                 <li>Advanced Data Structures &amp; Algorithms</li>

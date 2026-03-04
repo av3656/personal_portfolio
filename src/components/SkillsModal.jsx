@@ -29,7 +29,7 @@ export function SkillsModal({ isOpen, modalType, categoryTitle, skills = [], sel
     <AnimatePresence>
       {isOpen && (
         <Motion.div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/60 px-4 backdrop-blur"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-ai-navy/60 px-4 backdrop-blur"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -45,12 +45,12 @@ export function SkillsModal({ isOpen, modalType, categoryTitle, skills = [], sel
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 8 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-slate-50/10 bg-white/75 p-5 shadow-2xl shadow-slate-950/20 backdrop-blur dark:bg-slate-900/85"
+            className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-ai-border bg-ai-card/75 p-5 shadow-2xl shadow-[0_0_20px_rgba(34,211,238,0.25)] backdrop-blur dark:bg-ai-card/85"
           >
             <button
               type="button"
               onClick={onClose}
-              className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-900/10 bg-white/70 text-slate-700 transition hover:border-accent hover:text-accent dark:border-slate-50/15 dark:bg-slate-900/70 dark:text-slate-200"
+              className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full border border-ai-border bg-ai-card/70 text-ai-text-secondary transition hover:border-ai-violet hover:text-ai-violet-glow dark:border-ai-border dark:bg-ai-card/70 dark:text-ai-text-secondary"
               aria-label="Close skills modal"
             >
               <FiX size={16} />
@@ -60,7 +60,7 @@ export function SkillsModal({ isOpen, modalType, categoryTitle, skills = [], sel
               <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-accent-soft">
                 {singleMode ? 'Skill Focus' : 'Category Focus'}
               </p>
-              <h3 className="mt-1 text-xl font-semibold text-slate-900 dark:text-slate-50">
+              <h3 className="mt-1 text-xl font-semibold text-ai-text-primary dark:text-ai-text-primary">
                 {singleMode ? selectedSkill.name : categoryTitle}
               </h3>
             </div>
@@ -69,13 +69,13 @@ export function SkillsModal({ isOpen, modalType, categoryTitle, skills = [], sel
               {items.map((skill, idx) => (
                 <div key={skill.name} className="space-y-2">
                   <div className="flex items-center justify-between gap-3 text-sm">
-                    <span className="font-medium text-slate-700 transition-colors hover:text-accent dark:text-slate-200">
+                    <span className="font-medium text-ai-text-secondary transition-colors hover:text-ai-violet-glow dark:text-ai-text-secondary">
                       {skill.name}
                     </span>
-                    <span className="font-semibold text-slate-900 dark:text-slate-50">{skill.level}%</span>
+                    <span className="font-semibold text-ai-text-primary dark:text-ai-text-primary">{skill.level}%</span>
                   </div>
 
-                  <div className={`${singleMode ? 'h-4' : 'h-3'} w-full overflow-hidden rounded-full bg-slate-200/80 dark:bg-slate-800/80`}>
+                  <div className={`${singleMode ? 'h-4' : 'h-3'} w-full overflow-hidden rounded-full bg-ai-surface/80 dark:bg-ai-surface/80`}>
                     <Motion.div
                       className="h-full rounded-full bg-gradient-to-r from-accent via-sky-400 to-emerald-400 shadow-[0_0_20px_rgba(14,165,233,0.35)]"
                       initial={{ width: 0 }}
@@ -88,7 +88,7 @@ export function SkillsModal({ isOpen, modalType, categoryTitle, skills = [], sel
             </div>
 
             {categoryMode && (
-              <p className="mt-5 text-xs text-slate-500 dark:text-slate-400">
+              <p className="mt-5 text-xs text-ai-text-secondary dark:text-ai-text-secondary">
                 Click any individual skill badge in the section for a focused view.
               </p>
             )}

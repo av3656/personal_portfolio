@@ -75,7 +75,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="flex min-h-screen snap-start items-center bg-surface-light px-4 py-24 dark:bg-slate-950"
+      className="flex min-h-screen snap-start items-center bg-ai-navy px-4 py-24 dark:bg-ai-navy"
       aria-label="Contact"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-8 lg:flex-row">
@@ -83,10 +83,10 @@ export function Contact() {
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">
             Contact
           </p>
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-50">
+          <h2 className="text-2xl font-semibold tracking-tight text-ai-text-primary sm:text-3xl dark:text-ai-text-primary">
             Let&apos;s build something thoughtful.
           </h2>
-          <p className="max-w-md text-sm text-slate-600 dark:text-slate-300">
+          <p className="max-w-md text-sm text-ai-text-secondary dark:text-ai-text-secondary">
             Open to internships, backend-focused roles, and collaborative projects where clean
             engineering and curiosity matter.
           </p>
@@ -98,7 +98,7 @@ export function Contact() {
                 href={social.href}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/80 px-3 py-1.5 text-slate-700 shadow-sm transition hover:border-accent hover:text-accent dark:border-slate-50/15 dark:bg-slate-900/80 dark:text-slate-100"
+                className="inline-flex items-center gap-2 rounded-full border border-ai-border bg-ai-card/80 px-3 py-1.5 text-ai-text-secondary shadow-sm transition hover:border-ai-violet hover:text-ai-violet-glow dark:border-ai-border dark:bg-ai-card/80 dark:text-ai-text-primary"
               >
                 <social.icon size={14} />
                 {social.label}
@@ -112,7 +112,7 @@ export function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.4 }}
-          className="mt-6 flex-1 rounded-3xl border border-slate-900/5 bg-white/80 p-5 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-slate-50/10 dark:bg-slate-900/80 lg:mt-0"
+          className="mt-6 flex-1 rounded-3xl border border-ai-border bg-ai-card/80 p-5 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-ai-border dark:bg-ai-card/80 lg:mt-0"
         >
           <form
             className="space-y-4"
@@ -122,7 +122,7 @@ export function Contact() {
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-xs font-medium text-slate-600 dark:text-slate-200"
+                  className="block text-xs font-medium text-ai-text-secondary dark:text-ai-text-secondary"
                 >
                   Name
                 </label>
@@ -131,7 +131,7 @@ export function Contact() {
                   name="name"
                   type="text"
                   autoComplete="name"
-                  className="mt-1 w-full rounded-xl border border-slate-900/10 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-accent/40 placeholder:text-slate-400 focus:border-accent focus:ring-2 dark:border-slate-50/15 dark:bg-slate-900 dark:text-slate-50"
+                  className="mt-1 w-full rounded-xl border border-ai-border bg-ai-surface px-3 py-2 text-sm text-ai-text-primary outline-none ring-accent/40 placeholder:text-ai-text-secondary focus:border-accent focus:ring-2 dark:border-ai-border dark:bg-ai-card dark:text-ai-text-primary"
                   placeholder="Your name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -141,7 +141,7 @@ export function Contact() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-xs font-medium text-slate-600 dark:text-slate-200"
+                  className="block text-xs font-medium text-ai-text-secondary dark:text-ai-text-secondary"
                 >
                   Email
                 </label>
@@ -150,7 +150,7 @@ export function Contact() {
                   name="email"
                   type="email"
                   autoComplete="email"
-                  className="mt-1 w-full rounded-xl border border-slate-900/10 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-accent/40 placeholder:text-slate-400 focus:border-accent focus:ring-2 dark:border-slate-50/15 dark:bg-slate-900 dark:text-slate-50"
+                  className="mt-1 w-full rounded-xl border border-ai-border bg-ai-surface px-3 py-2 text-sm text-ai-text-primary outline-none ring-accent/40 placeholder:text-ai-text-secondary focus:border-accent focus:ring-2 dark:border-ai-border dark:bg-ai-card dark:text-ai-text-primary"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -162,7 +162,7 @@ export function Contact() {
             <div>
               <label
                 htmlFor="github"
-                className="block text-xs font-medium text-slate-600 dark:text-slate-200"
+                className="block text-xs font-medium text-ai-text-secondary dark:text-ai-text-secondary"
               >
                 GitHub ID
               </label>
@@ -170,7 +170,7 @@ export function Contact() {
                 id="github"
                 name="github"
                 type="text"
-                className="mt-1 w-full rounded-xl border border-slate-900/10 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-accent/40 placeholder:text-slate-400 focus:border-accent focus:ring-2 dark:border-slate-50/15 dark:bg-slate-900 dark:text-slate-50"
+                className="mt-1 w-full rounded-xl border border-ai-border bg-ai-surface px-3 py-2 text-sm text-ai-text-primary outline-none ring-accent/40 placeholder:text-ai-text-secondary focus:border-accent focus:ring-2 dark:border-ai-border dark:bg-ai-card dark:text-ai-text-primary"
                 placeholder="your-github-username or profile link"
                 value={github}
                 onChange={(e) => setGithub(e.target.value)}
@@ -181,7 +181,7 @@ export function Contact() {
             <div>
               <label
                 htmlFor="message"
-                className="block text-xs font-medium text-slate-600 dark:text-slate-200"
+                className="block text-xs font-medium text-ai-text-secondary dark:text-ai-text-secondary"
               >
                 Message
               </label>
@@ -189,7 +189,7 @@ export function Contact() {
                 id="message"
                 name="message"
                 rows={4}
-                className="mt-1 w-full rounded-xl border border-slate-900/10 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-accent/40 placeholder:text-slate-400 focus:border-accent focus:ring-2 dark:border-slate-50/15 dark:bg-slate-900 dark:text-slate-50"
+                className="mt-1 w-full rounded-xl border border-ai-border bg-ai-surface px-3 py-2 text-sm text-ai-text-primary outline-none ring-accent/40 placeholder:text-ai-text-secondary focus:border-accent focus:ring-2 dark:border-ai-border dark:bg-ai-card dark:text-ai-text-primary"
                 placeholder="Tell me about your project or opportunity..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
@@ -202,7 +202,7 @@ export function Contact() {
               whileHover={{ y: -2 }}
               whileTap={{ y: 0, scale: 0.98 }}
               disabled={loading}
-              className="inline-flex w-full items-center justify-center rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light disabled:cursor-not-allowed disabled:opacity-70 dark:focus-visible:ring-offset-slate-950 sm:w-auto"
+              className="inline-flex w-full items-center justify-center rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-ai-navy shadow-md shadow-[0_0_12px_rgba(34,211,238,0.35)] transition hover:bg-[#06b6d4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-ai-navy disabled:cursor-not-allowed disabled:opacity-70 dark:focus-visible:ring-offset-ai-navy sm:w-auto"
             >
               {loading ? 'Sending...' : 'Send Message'}
             </motion.button>

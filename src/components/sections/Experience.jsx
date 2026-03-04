@@ -17,7 +17,7 @@ export function Experience() {
   return (
     <section
       id="experience"
-      className="flex min-h-screen snap-start items-center bg-surface-light px-4 py-24 dark:bg-slate-950"
+      className="flex min-h-screen snap-start items-center bg-ai-navy px-4 py-24 dark:bg-ai-navy"
       aria-label="Experience"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
@@ -25,7 +25,7 @@ export function Experience() {
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">
             Experience
           </p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-50">
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ai-text-primary sm:text-3xl dark:text-ai-text-primary">
             Steps toward professional software engineering.
           </h2>
         </div>
@@ -38,17 +38,17 @@ export function Experience() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ delay: index * 0.06, duration: 0.4 }}
-              className="flex flex-col gap-2 rounded-2xl border border-slate-900/5 bg-white/80 px-4 py-4 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-slate-50/10 dark:bg-slate-900/80 sm:px-5 sm:py-5"
+              className="flex flex-col gap-2 rounded-2xl border border-ai-border bg-ai-card/80 px-4 py-4 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-ai-border dark:bg-ai-card/80 sm:px-5 sm:py-5"
             >
               <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-baseline">
-                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+                <h3 className="text-sm font-semibold text-ai-text-primary dark:text-ai-text-primary">
                   {item.title}
                 </h3>
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-ai-text-secondary dark:text-ai-text-secondary">
                   {item.period}
                 </p>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300">{item.body}</p>
+              <p className="text-xs text-ai-text-secondary dark:text-ai-text-secondary">{item.body}</p>
             </motion.article>
           ))}
         </div>

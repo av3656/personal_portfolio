@@ -65,7 +65,7 @@ export function Projects() {
   return (
     <section
       id="projects"
-      className="flex min-h-screen snap-start items-center bg-gradient-to-b from-surface-light to-slate-100 px-4 py-24 dark:from-slate-950 dark:to-slate-900"
+      className="flex min-h-screen snap-start items-center bg-gradient-to-b from-ai-navy to-ai-surface px-4 py-24 dark:from-ai-navy dark:to-ai-surface"
       aria-label="Projects"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
@@ -74,10 +74,10 @@ export function Projects() {
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">
               Projects
             </p>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-50">
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ai-text-primary sm:text-3xl dark:text-ai-text-primary">
               Selected work with a backend mindset.
             </h2>
-            <p className="max-w-xl text-sm text-slate-600 dark:text-slate-300">
+            <p className="max-w-xl text-sm text-ai-text-secondary dark:text-ai-text-secondary">
               A mix of systems-oriented projects and learning experiments that focus on clarity,
               structure, and performance.
             </p>
@@ -93,26 +93,26 @@ export function Projects() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
-              className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-900/5 bg-white/80 shadow-sm shadow-slate-900/5 backdrop-blur transition hover:-translate-y-2 hover:shadow-lg hover:shadow-slate-900/10 dark:border-slate-50/10 dark:bg-slate-900/80"
+              className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-ai-border bg-ai-card/80 shadow-sm shadow-slate-900/5 backdrop-blur transition hover:-translate-y-2 hover:border-ai-violet/30 hover:shadow-lg hover:shadow-[0_0_20px_rgba(34,211,238,0.25)] dark:border-ai-border dark:bg-ai-card/80"
               onClick={() => openModal(project)}
             >
-              <div className="relative h-40 overflow-hidden bg-slate-200/60 dark:bg-slate-800/60">
+              <div className="relative h-40 overflow-hidden bg-ai-surface/60 dark:bg-ai-surface/60">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.5, ease: 'easeOut' }}
-                  className="flex h-full items-center justify-center text-xs font-medium uppercase tracking-[0.25em] text-slate-500 dark:text-slate-300"
+                  className="flex h-full items-center justify-center text-xs font-medium uppercase tracking-[0.25em] text-ai-text-secondary dark:text-ai-text-secondary"
                 >
                   Project Preview
                 </motion.div>
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-transparent" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ai-navy/20 via-transparent to-transparent" />
               </div>
               <div className="flex flex-1 flex-col gap-3 p-4">
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-50">
+                  <h3 className="text-sm font-semibold text-ai-text-primary dark:text-ai-text-primary">
                     {project.title}
                   </h3>
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-300">
+                <p className="text-xs text-ai-text-secondary dark:text-ai-text-secondary">
                   {project.description}
                 </p>
                 <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-1">
@@ -120,13 +120,13 @@ export function Projects() {
                     {project.tech.map((tech) => (
                       <span
                         key={tech}
-                        className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-200"
+                        className="rounded-full bg-ai-surface px-2 py-0.5 text-[10px] font-medium text-ai-text-secondary dark:bg-ai-surface dark:text-ai-text-secondary"
                       >
                         {tech}
                       </span>
                     ))}
                   </div>
-                  <div className="flex gap-2 text-slate-400">
+                  <div className="flex gap-2 text-ai-text-secondary">
                     <FiGithub aria-hidden="true" />
                     <FiExternalLink aria-hidden="true" />
                   </div>
@@ -140,7 +140,7 @@ export function Projects() {
       <AnimatePresence>
         {active && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 backdrop-blur"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-ai-navy/60 px-4 backdrop-blur"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -152,12 +152,12 @@ export function Projects() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.98 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="relative max-h-[80vh] w-full max-w-3xl overflow-hidden rounded-3xl border border-slate-50/10 bg-slate-900/90 p-5 shadow-2xl"
+              className="relative max-h-[80vh] w-full max-w-3xl overflow-hidden rounded-3xl border border-ai-border bg-ai-card/90 p-5 shadow-2xl"
             >
               <button
                 type="button"
                 onClick={closeModal}
-                className="absolute right-4 top-4 rounded-full border border-slate-50/10 bg-slate-900/80 p-1.5 text-slate-300 hover:text-white"
+                className="absolute right-4 top-4 rounded-full border border-ai-border bg-ai-card/80 p-1.5 text-ai-text-secondary hover:text-ai-text-primary"
                 aria-label="Close project details"
               >
                 <FiX size={16} />
@@ -165,9 +165,9 @@ export function Projects() {
 
               <div className="flex flex-col gap-5 md:flex-row">
                 <div className="md:w-2/3">
-                  <div className="relative h-52 overflow-hidden rounded-2xl bg-slate-800">
+                  <div className="relative h-52 overflow-hidden rounded-2xl bg-ai-surface">
                     <div className="absolute inset-0 bg-gradient-to-tr from-accent/40 via-sky-500/20 to-emerald-400/20" />
-                    <div className="relative flex h-full items-center justify-center text-xs font-medium uppercase tracking-[0.25em] text-slate-100">
+                    <div className="relative flex h-full items-center justify-center text-xs font-medium uppercase tracking-[0.25em] text-ai-text-primary">
                       Image {imageIndex + 1} / {active.images.length}
                     </div>
                   </div>
@@ -175,7 +175,7 @@ export function Projects() {
                     <button
                       type="button"
                       onClick={nextImage}
-                      className="mt-3 text-xs font-medium text-slate-300 underline-offset-4 hover:underline"
+                      className="mt-3 text-xs font-medium text-ai-text-secondary underline-offset-4 hover:underline"
                     >
                       Next preview
                     </button>
@@ -186,17 +186,17 @@ export function Projects() {
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">
                     Project
                   </p>
-                  <h3 className="text-lg font-semibold text-white">{active.title}</h3>
-                  <p className="text-xs text-slate-300">{active.description}</p>
+                  <h3 className="text-lg font-semibold text-ai-text-primary">{active.title}</h3>
+                  <p className="text-xs text-ai-text-secondary">{active.description}</p>
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ai-text-secondary">
                       Tech Breakdown
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {active.tech.map((tech) => (
                         <span
                           key={tech}
-                          className="rounded-full bg-slate-800 px-3 py-1 text-[10px] font-medium text-slate-100"
+                          className="rounded-full bg-ai-surface px-3 py-1 text-[10px] font-medium text-ai-text-primary"
                         >
                           {tech}
                         </span>
@@ -209,7 +209,7 @@ export function Projects() {
                       href={active.github}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1 rounded-full bg-slate-800 px-3 py-1.5 text-slate-100 hover:bg-slate-700"
+                      className="inline-flex items-center gap-1 rounded-full bg-ai-surface px-3 py-1.5 text-ai-text-primary hover:bg-ai-card"
                     >
                       <FiGithub size={14} />
                       GitHub
@@ -218,7 +218,7 @@ export function Projects() {
                       href={active.demo}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1.5 text-slate-900 hover:bg-slate-100"
+                      className="inline-flex items-center gap-1 rounded-full border border-ai-violet bg-ai-violet/10 px-3 py-1.5 text-ai-violet hover:bg-ai-violet/20"
                     >
                       <FiExternalLink size={14} />
                       Live Demo
@@ -233,4 +233,3 @@ export function Projects() {
     </section>
   )
 }
-

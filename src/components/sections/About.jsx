@@ -27,7 +27,7 @@ export function About() {
   return (
     <section
       id="about"
-      className="relative flex min-h-screen snap-start items-center bg-gradient-to-b from-surface-light to-slate-50 px-4 py-24 dark:from-slate-950 dark:to-slate-900"
+      className="relative flex min-h-screen snap-start items-center bg-gradient-to-b from-ai-navy to-ai-surface px-4 py-24 dark:from-ai-navy dark:to-ai-surface"
       aria-label="About Aman"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row">
@@ -35,15 +35,15 @@ export function About() {
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">
             About
           </p>
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-50">
+          <h2 className="text-2xl font-semibold tracking-tight text-ai-text-primary sm:text-3xl dark:text-ai-text-primary">
             Story-driven engineering journey.
           </h2>
-          <p className="max-w-xl text-sm text-slate-600 dark:text-slate-300">
+          <p className="max-w-xl text-sm text-ai-text-secondary dark:text-ai-text-secondary">
             I&apos;m Aman, an engineering student from India who enjoys reasoning about systems — from
             how data flows through a backend service to how users experience an interface. I love
             working in Java, practicing DSA, and translating ideas into clean, scalable code.
           </p>
-          <p className="max-w-xl text-sm text-slate-600 dark:text-slate-300">
+          <p className="max-w-xl text-sm text-ai-text-secondary dark:text-ai-text-secondary">
             Outside of code, you&apos;ll likely find me on a badminton court, thinking a few moves ahead
             in chess, or reading about cloud architectures and system design.
           </p>
@@ -62,14 +62,14 @@ export function About() {
                   transition={{ delay: index * 0.08, duration: 0.5, ease: 'easeOut' }}
                   className="relative"
                 >
-                  <div className="absolute left-[-2.2rem] top-1.5 h-3 w-3 rounded-full border-2 border-surface-light bg-accent shadow-md shadow-accent/40 dark:border-slate-950" />
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-slate-400 dark:text-slate-500">
+                  <div className="absolute left-[-2.2rem] top-1.5 h-3 w-3 rounded-full border-2 border-ai-navy bg-accent shadow-md shadow-[0_0_20px_rgba(34,211,238,0.25)] dark:border-ai-navy" />
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ai-text-secondary dark:text-ai-text-secondary">
                     {item.label}
                   </p>
-                  <h3 className="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-50">
+                  <h3 className="mt-1 text-sm font-semibold text-ai-text-primary dark:text-ai-text-primary">
                     {item.title}
                   </h3>
-                  <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">{item.body}</p>
+                  <p className="mt-1 text-xs text-ai-text-secondary dark:text-ai-text-secondary">{item.body}</p>
                 </motion.article>
               ))}
             </div>
@@ -79,4 +79,3 @@ export function About() {
     </section>
   )
 }
-

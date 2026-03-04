@@ -33,17 +33,17 @@ export function Navbar({ theme, onToggleTheme }) {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 backdrop-blur-xl">
         <Link
           to="/"
-          className="rounded-full bg-slate-900/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-600 shadow-sm ring-1 ring-slate-900/5 backdrop-blur dark:bg-slate-50/5 dark:text-slate-200 dark:ring-slate-50/10"
+          className="rounded-full bg-ai-card/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-ai-text-secondary shadow-sm ring-1 ring-ai-border backdrop-blur dark:bg-ai-surface/5 dark:text-ai-text-secondary dark:ring-ai-border"
         >
           Aman Verma
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex dark:text-slate-200">
+        <nav className="hidden items-center gap-6 text-sm font-medium text-accent md:flex dark:text-accent">
           {pageLinks.map((link) => (
             <Link
               key={link.to}
               to={link.to}
-              className={`transition-colors hover:text-accent ${isActive(link.to) ? 'text-accent' : ''}`}
+              className={`transition-colors hover:text-ai-violet-glow ${isActive(link.to) ? 'text-accent' : ''}`}
             >
               {link.label}
             </Link>
@@ -54,7 +54,7 @@ export function Navbar({ theme, onToggleTheme }) {
           <button
             type="button"
             onClick={onToggleTheme}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-900/10 bg-white/70 text-slate-700 shadow-sm transition hover:border-accent hover:text-accent dark:border-slate-50/15 dark:bg-slate-900/60 dark:text-slate-100"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-ai-border bg-ai-card/70 text-ai-text-secondary shadow-sm transition hover:border-ai-violet hover:text-ai-violet-glow dark:border-ai-border dark:bg-ai-card/60 dark:text-ai-text-primary"
             aria-label="Toggle color theme"
           >
             <motion.span

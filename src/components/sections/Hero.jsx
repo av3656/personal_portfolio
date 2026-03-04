@@ -18,7 +18,7 @@ export function Hero() {
       className="relative flex min-h-screen snap-start items-center justify-center bg-hero-gradient px-4 pt-24"
       aria-label="Introduction"
     >
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-surface-light via-surface-light/95 to-slate-900/80 dark:from-surface-dark dark:via-slate-950 dark:to-slate-950" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ai-navy via-ai-navy/95 to-ai-surface dark:from-ai-navy dark:via-ai-navy dark:to-ai-surface" />
       <motion.div
         variants={container}
         initial="hidden"
@@ -26,15 +26,15 @@ export function Hero() {
         className="mx-auto flex max-w-6xl flex-col items-start gap-10 md:flex-row md:items-center"
       >
         <div className="flex-1 space-y-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500 dark:text-slate-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-ai-text-secondary dark:text-ai-text-secondary">
             Engineering Student · Java Developer
           </p>
 
-          <h1 className="text-balance text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl md:text-6xl dark:text-slate-50">
+          <h1 className="text-balance text-4xl font-semibold tracking-tight text-ai-text-primary sm:text-5xl md:text-6xl dark:text-ai-text-primary">
             Hi, I&apos;m <span className="bg-gradient-to-r from-accent to-sky-400 bg-clip-text text-transparent">Aman Verma.</span>
           </h1>
 
-          <p className="max-w-xl text-balance text-sm text-slate-600 sm:text-base dark:text-slate-300">
+          <p className="max-w-xl text-balance text-sm text-ai-text-secondary sm:text-base dark:text-ai-text-secondary">
             I&apos;m an engineering student and aspiring software engineer focused on{' '}
             <span className="font-medium">clean backend systems</span>,{' '}
             <span className="font-medium">Java</span>, and{' '}
@@ -45,26 +45,26 @@ export function Hero() {
           <div className="flex flex-wrap gap-3">
             <Link
               to="/projects"
-              className="inline-flex items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-accent/40 transition hover:bg-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-light dark:focus-visible:ring-offset-surface-dark"
+              className="inline-flex items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-ai-navy shadow-lg shadow-[0_0_12px_rgba(34,211,238,0.35)] transition hover:bg-[#06b6d4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-ai-navy dark:focus-visible:ring-offset-ai-navy"
             >
               View Projects
             </Link>
             <Link
               to="/resume"
-              className="inline-flex items-center justify-center rounded-full border border-slate-900/10 bg-white/70 px-5 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-accent hover:text-accent dark:border-slate-50/15 dark:bg-slate-900/60 dark:text-slate-100"
+              className="inline-flex items-center justify-center rounded-full border border-ai-violet bg-ai-card/70 px-5 py-2.5 text-sm font-semibold text-ai-violet shadow-sm transition hover:bg-ai-violet/10 hover:border-ai-violet hover:text-ai-violet-glow dark:border-ai-violet dark:bg-ai-card/60 dark:text-ai-violet"
             >
               Download Resume
             </Link>
           </div>
 
-          <div className="flex flex-wrap gap-3 text-xs text-slate-500 dark:text-slate-400">
-            <span className="rounded-full border border-slate-900/10 bg-white/60 px-3 py-1 dark:border-slate-50/10 dark:bg-slate-900/70">
+          <div className="flex flex-wrap gap-3 text-xs text-ai-text-secondary dark:text-ai-text-secondary">
+            <span className="rounded-full border border-ai-border bg-ai-card/60 px-3 py-1 dark:border-ai-border dark:bg-ai-card/70">
               Backend Development
             </span>
-            <span className="rounded-full border border-slate-900/10 bg-white/60 px-3 py-1 dark:border-slate-50/10 dark:bg-slate-900/70">
+            <span className="rounded-full border border-ai-border bg-ai-card/60 px-3 py-1 dark:border-ai-border dark:bg-ai-card/70">
               Java &amp; DSA
             </span>
-            <span className="rounded-full border border-slate-900/10 bg-white/60 px-3 py-1 dark:border-slate-50/10 dark:bg-slate-900/70">
+            <span className="rounded-full border border-ai-border bg-ai-card/60 px-3 py-1 dark:border-ai-border dark:bg-ai-card/70">
               AWS (Foundations)
             </span>
           </div>
@@ -81,17 +81,17 @@ export function Hero() {
       </motion.div>
 
       <div className="pointer-events-none absolute bottom-10 left-1/2 hidden -translate-x-1/2 transform flex-col items-center gap-3 md:flex">
-        <div className="text-xs uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400">
+        <div className="text-xs uppercase tracking-[0.25em] text-ai-text-secondary dark:text-ai-text-secondary">
           Scroll
         </div>
         <motion.div
           initial={{ y: 0 }}
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
-          className="h-10 w-5 rounded-full border border-slate-900/15 bg-white/60 p-1 shadow-sm backdrop-blur dark:border-slate-50/20 dark:bg-slate-900/70"
+          className="h-10 w-5 rounded-full border border-ai-border bg-ai-card/60 p-1 shadow-sm backdrop-blur dark:border-ai-border dark:bg-ai-card/70"
           aria-hidden="true"
         >
-          <div className="h-full w-full rounded-full bg-slate-400/70 dark:bg-slate-200/70" />
+          <div className="h-full w-full rounded-full bg-ai-text-secondary/70 dark:bg-ai-text-secondary/70" />
         </motion.div>
       </div>
     </section>

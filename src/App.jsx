@@ -7,20 +7,24 @@ import { ProjectsPage } from './pages/Projects'
 import { ExperiencePage } from './pages/Experience'
 import { ResumePage } from './pages/Resume'
 import { ContactPage } from './pages/Contact'
+import BackgroundEffects from './components/background/BackgroundEffects'
 
 function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/skills" element={<SkillsPage />} />
-        <Route path="/projects" element={<ProjectsPage />} />
-        <Route path="/experience" element={<ExperiencePage />} />
-        <Route path="/resume" element={<ResumePage />} />
-        <Route path="/contact" element={<ContactPage />} />
-      </Route>
-    </Routes>
+    <>
+      <BackgroundEffects />
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/skills" element={<SkillsPage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/experience" element={<ExperiencePage />} />
+          <Route path="/resume" element={<ResumePage />} />
+          <Route path="/contact" element={<ContactPage />} />
+        </Route>
+      </Routes>
+    </>
   )
 }
 

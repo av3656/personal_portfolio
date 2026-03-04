@@ -22,11 +22,11 @@ export function Sidebar({ activeSection, sectionIds = [], onSectionClick }) {
 
   return (
     <div className="pointer-events-none fixed left-4 top-24 z-30 hidden select-none md:block">
-      <div className="pointer-events-auto w-56 space-y-4 rounded-2xl border border-white/10 bg-transparent p-6 shadow-lg">
+      <div className="pointer-events-auto w-56 space-y-4 rounded-2xl border border-ai-border bg-ai-card/60 p-6 shadow-lg backdrop-blur">
         {/* Heading text intentionally removed to keep layout minimal while preserving spacing */}
         <div className="h-4" />
 
-        <div className="relative overflow-hidden rounded-2xl bg-slate-900/5 p-3 dark:bg-slate-50/5">
+        <div className="relative overflow-hidden rounded-2xl bg-ai-card/5 p-3 dark:bg-ai-surface/5">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
@@ -53,13 +53,13 @@ export function Sidebar({ activeSection, sectionIds = [], onSectionClick }) {
                 onClick={() => handleClick(id)}
                 className={`flex items-center gap-2 rounded-full px-2 py-1 text-left capitalize transition-colors ${
                   isActive
-                    ? 'text-accent font-semibold'
-                    : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100'
+                    ? 'bg-[rgba(34,211,238,0.08)] text-accent font-semibold shadow-[0_0_20px_rgba(34,211,238,0.25)]'
+                    : 'text-ai-text-secondary hover:text-ai-violet-glow dark:text-ai-text-secondary dark:hover:text-ai-violet-glow'
                 }`}
               >
                 <span
                   className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                    isActive ? 'bg-accent' : 'bg-slate-400/60 dark:bg-slate-500/80'
+                    isActive ? 'bg-accent' : 'bg-ai-text-secondary/60 dark:bg-ai-text-secondary/80'
                   }`}
                   aria-hidden="true"
                 />

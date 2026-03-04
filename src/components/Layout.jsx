@@ -39,7 +39,7 @@ export function Layout() {
   }, [location.pathname])
 
   return (
-    <div className="flex min-h-screen flex-col bg-surface-light text-slate-900 dark:bg-slate-950 dark:text-slate-50">
+    <div className="flex min-h-screen flex-col bg-ai-navy text-ai-text-primary dark:bg-ai-navy dark:text-ai-text-primary">
       <VisualEnhancements />
       <Navbar theme={theme} onToggleTheme={toggleTheme} />
       <Sidebar
