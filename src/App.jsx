@@ -7,14 +7,10 @@ import { ProjectsPage } from './pages/Projects'
 import { ExperiencePage } from './pages/Experience'
 import { ResumePage } from './pages/Resume'
 import { ContactPage } from './pages/Contact'
-import BackgroundEffects from './components/background/BackgroundEffects'
-import TechBackgroundLayer from './components/background/TechBackgroundLayer'
 
 function App() {
   return (
     <>
-      <TechBackgroundLayer />
-      <BackgroundEffects />
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
