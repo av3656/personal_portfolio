@@ -44,8 +44,11 @@ export function About() {
             working in Java, practicing DSA, and translating ideas into clean, scalable code.
           </p>
           <p className="max-w-xl text-sm text-ai-text-secondary dark:text-ai-text-secondary">
+            I&apos;m especially interested in backend architecture, API design, and building systems that
+            remain reliable and efficient as they scale. I enjoy breaking complex problems into
+            smaller components and designing solutions that are both maintainable and performant.
             Outside of code, you&apos;ll likely find me on a badminton court, thinking a few moves ahead
-            in chess, or reading about cloud architectures and system design.
+            in chess, or exploring concepts around cloud architecture and modern distributed systems.
           </p>
         </div>
 
