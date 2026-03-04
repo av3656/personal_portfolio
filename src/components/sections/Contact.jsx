@@ -28,6 +28,10 @@ const socials = [
   },
 ]
 
+const EMAILJS_SERVICE_ID = 'service_rujo9g5'
+const EMAILJS_TEMPLATE_ID = 'template_1h0irdb'
+const EMAILJS_PUBLIC_KEY = 'e9N8MhJBf60vznEmS'
+
 export function Contact() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -45,19 +49,33 @@ export function Contact() {
     setSuccess(false)
     setError(false)
 
-    const githubLink = github.startsWith('http') ? github : `https://github.com/${github}`
+    const normalizedName = name.trim()
+    const normalizedEmail = email.trim()
+    const rawGithub = github.trim()
+    const normalizedMessage = message.trim()
+
+    const githubHandle = rawGithub
+      .replace(/^@/, '')
+      .replace(/^https?:\/\/(www\.)?github\.com\//i, '')
+      .replace(/\/+$/, '')
+
+    const githubLink = /^https?:\/\//i.test(rawGithub)
+      ? rawGithub
+      : `https://github.com/${githubHandle}`
 
     try {
       await emailjs.send(
-        'service_zwajs2k',
-        'template_1h0irdb',
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
         {
-          name,
-          email,
+          name: normalizedName,
+          email: normalizedEmail,
           github: githubLink,
-          message,
+          message: normalizedMessage,
         },
-        'e9N8MhJBf60vznEmS',
+        {
+          publicKey: EMAILJS_PUBLIC_KEY,
+        },
       )
 
       setSuccess(true)
