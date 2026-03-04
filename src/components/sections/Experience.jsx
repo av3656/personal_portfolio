@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { Reveal } from '../ui/Reveal'
 
 const items = [
   {
@@ -32,28 +32,25 @@ export function Experience() {
 
         <div className="space-y-4">
           {items.map((item, index) => (
-            <motion.article
+            <Reveal
               key={item.title}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ delay: index * 0.06, duration: 0.4 }}
-              className="flex flex-col gap-2 rounded-2xl border border-ai-border bg-ai-card/80 px-4 py-4 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-ai-border dark:bg-ai-card/80 sm:px-5 sm:py-5"
+              delay={index * 0.08}
             >
-              <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-baseline">
-                <h3 className="text-sm font-semibold text-ai-text-primary dark:text-ai-text-primary">
-                  {item.title}
-                </h3>
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-ai-text-secondary dark:text-ai-text-secondary">
-                  {item.period}
-                </p>
-              </div>
-              <p className="text-xs text-ai-text-secondary dark:text-ai-text-secondary">{item.body}</p>
-            </motion.article>
+              <article className="flex flex-col gap-2 rounded-2xl border border-ai-border bg-ai-card/80 px-4 py-4 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-ai-border dark:bg-ai-card/80 sm:px-5 sm:py-5">
+                <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-baseline">
+                  <h3 className="text-sm font-semibold text-ai-text-primary dark:text-ai-text-primary">
+                    {item.title}
+                  </h3>
+                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-ai-text-secondary dark:text-ai-text-secondary">
+                    {item.period}
+                  </p>
+                </div>
+                <p className="text-xs text-ai-text-secondary dark:text-ai-text-secondary">{item.body}</p>
+              </article>
+            </Reveal>
           ))}
         </div>
       </div>
     </section>
   )
 }
-

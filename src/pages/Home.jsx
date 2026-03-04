@@ -1,6 +1,7 @@
 import { Hero } from '../components/sections/Hero'
 import { About } from '../components/sections/About'
 import { Skills } from '../components/sections/Skills'
+import { TechStack } from '../sections/TechStack'
 import { Projects } from '../components/sections/Projects'
 import { Experience } from '../components/sections/Experience'
 import { Resume } from '../components/sections/Resume'
@@ -17,6 +18,8 @@ export function Home() {
       <About />
       <SectionMotionDivider />
       <Skills />
+      <SectionMotionDivider />
+      <TechStack />
       <SectionMotionDivider />
       <Projects />
       <SectionMotionDivider />

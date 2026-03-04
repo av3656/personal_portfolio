@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiExternalLink, FiGithub, FiX } from 'react-icons/fi'
+import { Reveal } from '../ui/Reveal'
 
 const projects = [
   {
@@ -34,15 +35,6 @@ const projects = [
     images: ['/previews/dsa-1.png', '/previews/dsa-2.png'],
   },
 ]
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: 0.1 * i, duration: 0.4, ease: 'easeOut' },
-  }),
-}
 
 export function Projects() {
   const [active, setActive] = useState(null)
@@ -86,53 +78,52 @@ export function Projects() {
 
         <div className="grid gap-6 md:grid-cols-3">
           {projects.map((project, index) => (
-            <motion.article
+            <Reveal
               key={project.id}
-              custom={index}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-ai-border bg-ai-card/80 shadow-sm shadow-slate-900/5 backdrop-blur transition hover:-translate-y-2 hover:border-ai-violet/30 hover:shadow-lg hover:shadow-[0_0_20px_rgba(34,211,238,0.25)] dark:border-ai-border dark:bg-ai-card/80"
-              onClick={() => openModal(project)}
+              delay={index * 0.08}
             >
-              <div className="relative h-40 overflow-hidden bg-ai-surface/60 dark:bg-ai-surface/60">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.5, ease: 'easeOut' }}
-                  className="flex h-full items-center justify-center text-xs font-medium uppercase tracking-[0.25em] text-ai-text-secondary dark:text-ai-text-secondary"
-                >
-                  Project Preview
-                </motion.div>
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ai-navy/20 via-transparent to-transparent" />
-              </div>
-              <div className="flex flex-1 flex-col gap-3 p-4">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-sm font-semibold text-ai-text-primary dark:text-ai-text-primary">
-                    {project.title}
-                  </h3>
+              <article
+                className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-ai-border bg-ai-card/80 shadow-sm shadow-slate-900/5 backdrop-blur transition hover:-translate-y-2 hover:border-ai-violet/30 hover:shadow-lg hover:shadow-[0_0_20px_rgba(34,211,238,0.25)] dark:border-ai-border dark:bg-ai-card/80"
+                onClick={() => openModal(project)}
+              >
+                <div className="relative h-40 overflow-hidden bg-ai-surface/60 dark:bg-ai-surface/60">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    className="flex h-full items-center justify-center text-xs font-medium uppercase tracking-[0.25em] text-ai-text-secondary dark:text-ai-text-secondary"
+                  >
+                    Project Preview
+                  </motion.div>
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ai-navy/20 via-transparent to-transparent" />
                 </div>
-                <p className="text-xs text-ai-text-secondary dark:text-ai-text-secondary">
-                  {project.description}
-                </p>
-                <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-1">
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className="rounded-full bg-ai-surface px-2 py-0.5 text-[10px] font-medium text-ai-text-secondary dark:bg-ai-surface dark:text-ai-text-secondary"
-                      >
-                        {tech}
-                      </span>
-                    ))}
+                <div className="flex flex-1 flex-col gap-3 p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-sm font-semibold text-ai-text-primary dark:text-ai-text-primary">
+                      {project.title}
+                    </h3>
                   </div>
-                  <div className="flex gap-2 text-ai-text-secondary">
-                    <FiGithub aria-hidden="true" />
-                    <FiExternalLink aria-hidden="true" />
+                  <p className="text-xs text-ai-text-secondary dark:text-ai-text-secondary">
+                    {project.description}
+                  </p>
+                  <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-1">
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.tech.map((tech) => (
+                        <span
+                          key={tech}
+                          className="rounded-full bg-ai-surface px-2 py-0.5 text-[10px] font-medium text-ai-text-secondary dark:bg-ai-surface dark:text-ai-text-secondary"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex gap-2 text-ai-text-secondary">
+                      <FiGithub aria-hidden="true" />
+                      <FiExternalLink aria-hidden="true" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.article>
+              </article>
+            </Reveal>
           ))}
         </div>
       </div>

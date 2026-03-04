@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { Reveal } from '../ui/Reveal'
 
 const timeline = [
   {
@@ -54,23 +54,21 @@ export function About() {
             <div className="absolute left-3 top-0 bottom-0 w-px bg-gradient-to-b from-accent/60 via-accent/10 to-transparent" />
             <div className="space-y-6 pl-10">
               {timeline.map((item, index) => (
-                <motion.article
+                <Reveal
                   key={item.label}
-                  initial={{ opacity: 0, x: 24 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.6 }}
-                  transition={{ delay: index * 0.08, duration: 0.5, ease: 'easeOut' }}
-                  className="relative"
+                  delay={index * 0.08}
                 >
-                  <div className="absolute left-[-2.2rem] top-1.5 h-3 w-3 rounded-full border-2 border-ai-navy bg-accent shadow-md shadow-[0_0_20px_rgba(34,211,238,0.25)] dark:border-ai-navy" />
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ai-text-secondary dark:text-ai-text-secondary">
-                    {item.label}
-                  </p>
-                  <h3 className="mt-1 text-sm font-semibold text-ai-text-primary dark:text-ai-text-primary">
-                    {item.title}
-                  </h3>
-                  <p className="mt-1 text-xs text-ai-text-secondary dark:text-ai-text-secondary">{item.body}</p>
-                </motion.article>
+                  <article className="relative">
+                    <div className="absolute left-[-2.2rem] top-1.5 h-3 w-3 rounded-full border-2 border-ai-navy bg-accent shadow-md shadow-[0_0_20px_rgba(34,211,238,0.25)] dark:border-ai-navy" />
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ai-text-secondary dark:text-ai-text-secondary">
+                      {item.label}
+                    </p>
+                    <h3 className="mt-1 text-sm font-semibold text-ai-text-primary dark:text-ai-text-primary">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1 text-xs text-ai-text-secondary dark:text-ai-text-secondary">{item.body}</p>
+                  </article>
+                </Reveal>
               ))}
             </div>
           </div>

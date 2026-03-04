@@ -3,6 +3,7 @@ import emailjs from '@emailjs/browser'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FiGithub, FiLinkedin, FiInstagram } from 'react-icons/fi'
 import { FaXTwitter } from 'react-icons/fa6'
+import { Reveal } from '../ui/Reveal'
 
 const socials = [
   {
@@ -79,39 +80,42 @@ export function Contact() {
       aria-label="Contact"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-8 lg:flex-row">
-        <div className="flex-1 space-y-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">
-            Contact
-          </p>
-          <h2 className="text-2xl font-semibold tracking-tight text-ai-text-primary sm:text-3xl dark:text-ai-text-primary">
-            Let&apos;s build something thoughtful.
-          </h2>
-          <p className="max-w-md text-sm text-ai-text-secondary dark:text-ai-text-secondary">
-            Open to internships, backend-focused roles, and collaborative projects where clean
-            engineering and curiosity matter.
-          </p>
+        <Reveal className="flex-1 space-y-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">
+              Contact
+            </p>
+            <h2 className="text-2xl font-semibold tracking-tight text-ai-text-primary sm:text-3xl dark:text-ai-text-primary">
+              Let&apos;s build something thoughtful.
+            </h2>
+            <p className="max-w-md text-sm text-ai-text-secondary dark:text-ai-text-secondary">
+              Open to internships, backend-focused roles, and collaborative projects where clean
+              engineering and curiosity matter.
+            </p>
+          </div>
 
           <div className="mt-4 flex flex-wrap gap-3 text-xs">
-            {socials.map((social) => (
-              <a
+            {socials.map((social, index) => (
+              <Reveal
                 key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-ai-border bg-ai-card/80 px-3 py-1.5 text-ai-text-secondary shadow-sm transition hover:border-ai-violet hover:text-ai-violet-glow dark:border-ai-border dark:bg-ai-card/80 dark:text-ai-text-primary"
+                delay={index * 0.08}
               >
-                <social.icon size={14} />
-                {social.label}
-              </a>
+                <a
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-ai-border bg-ai-card/80 px-3 py-1.5 text-ai-text-secondary shadow-sm transition hover:border-ai-violet hover:text-ai-violet-glow dark:border-ai-border dark:bg-ai-card/80 dark:text-ai-text-primary"
+                >
+                  <social.icon size={14} />
+                  {social.label}
+                </a>
+              </Reveal>
             ))}
           </div>
-        </div>
+        </Reveal>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.4 }}
+        <Reveal
+          delay={0.08}
           className="mt-6 flex-1 rounded-3xl border border-ai-border bg-ai-card/80 p-5 shadow-sm shadow-slate-900/5 backdrop-blur dark:border-ai-border dark:bg-ai-card/80 lg:mt-0"
         >
           <form
@@ -234,7 +238,7 @@ export function Contact() {
               )}
             </AnimatePresence>
           </form>
-        </motion.div>
+        </Reveal>
       </div>
     </section>
   )
