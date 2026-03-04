@@ -1,0 +1,6 @@
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "VITE_EMAIL_PUBLIC_KEY,VITE_EMAIL_SERVICE_ID,VITE_EMAIL_TEMPLATE_ID"
