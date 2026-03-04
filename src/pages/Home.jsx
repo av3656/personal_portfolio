@@ -5,6 +5,7 @@ import { Projects } from '../components/sections/Projects'
 import { Experience } from '../components/sections/Experience'
 import { Resume } from '../components/sections/Resume'
 import { Contact } from '../components/sections/Contact'
+import { SectionMotionDivider } from '../components/ui/SectionMotionDivider'
 import { usePageMeta } from '../hooks/usePageMeta'
 
 export function Home() {
@@ -12,11 +13,17 @@ export function Home() {
   return (
     <>
       <Hero />
+      <SectionMotionDivider />
       <About />
+      <SectionMotionDivider />
       <Skills />
+      <SectionMotionDivider />
       <Projects />
+      <SectionMotionDivider />
       <Experience />
+      <SectionMotionDivider />
       <Resume />
+      <SectionMotionDivider />
       <Contact />
     </>
   )
