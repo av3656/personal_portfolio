@@ -6,6 +6,7 @@ import { Sidebar } from './Sidebar'
 import { Footer } from './Footer'
 import { useTheme } from '../hooks/useTheme'
 import { useActiveSectionForSidebar } from '../hooks/useActiveSectionForSidebar'
+import { VisualEnhancements } from './visuals/VisualEnhancements'
 
 const pageVariants = {
   initial: { opacity: 0, y: 16 },
@@ -39,6 +40,7 @@ export function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col bg-surface-light text-slate-900 dark:bg-slate-950 dark:text-slate-50">
+      <VisualEnhancements />
       <Navbar theme={theme} onToggleTheme={toggleTheme} />
       <Sidebar
         activeSection={activeSection}
