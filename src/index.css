@@ -6,9 +6,44 @@ html {
   scroll-behavior: smooth;
 }
 
+:root {
+  --ai-navy: 248 250 252;
+  --ai-surface: 255 255 255;
+  --ai-card: 241 245 249;
+  --accent: 6 182 212;
+  --accent-soft: 8 145 178;
+  --ai-violet: 34 211 238;
+  --ai-violet-glow: 103 232 249;
+  --ai-text-primary: 2 6 23;
+  --ai-text-secondary: 71 85 105;
+  --bg-grad-start: 248 250 252;
+  --bg-grad-mid: 248 250 252;
+  --bg-grad-end: 255 255 255;
+}
+
+.dark {
+  --ai-navy: 2 6 23;
+  --ai-surface: 15 23 42;
+  --ai-card: 30 41 59;
+  --accent: 34 211 238;
+  --accent-soft: 6 182 212;
+  --ai-violet: 34 211 238;
+  --ai-violet-glow: 103 232 249;
+  --ai-text-primary: 226 232 240;
+  --ai-text-secondary: 148 163 184;
+  --bg-grad-start: 2 6 23;
+  --bg-grad-mid: 2 6 23;
+  --bg-grad-end: 15 23 42;
+}
+
 body {
   @apply bg-ai-navy text-ai-text-primary dark:bg-ai-navy dark:text-ai-text-primary antialiased;
-  background-image: linear-gradient(180deg, #020617, #020617 40%, #0f172a 100%);
+  background-image: linear-gradient(
+    180deg,
+    rgb(var(--bg-grad-start)),
+    rgb(var(--bg-grad-mid)) 40%,
+    rgb(var(--bg-grad-end)) 100%
+  );
 }
 
 #root {

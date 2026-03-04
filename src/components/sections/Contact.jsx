@@ -131,7 +131,7 @@ export function Contact() {
                   name="name"
                   type="text"
                   autoComplete="name"
-                  className="mt-1 w-full rounded-xl border border-ai-border bg-ai-surface px-3 py-2 text-sm text-ai-text-primary outline-none ring-accent/40 placeholder:text-ai-text-secondary focus:border-accent focus:ring-2 dark:border-ai-border dark:bg-ai-card dark:text-ai-text-primary"
+                  className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-ai-text-primary outline-none ring-accent/40 placeholder:text-ai-text-secondary focus:border-accent focus:ring-2 focus:shadow-[0_0_8px_rgba(34,211,238,0.25)] dark:border-slate-700 dark:bg-ai-surface dark:text-ai-text-primary"
                   placeholder="Your name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -150,7 +150,7 @@ export function Contact() {
                   name="email"
                   type="email"
                   autoComplete="email"
-                  className="mt-1 w-full rounded-xl border border-ai-border bg-ai-surface px-3 py-2 text-sm text-ai-text-primary outline-none ring-accent/40 placeholder:text-ai-text-secondary focus:border-accent focus:ring-2 dark:border-ai-border dark:bg-ai-card dark:text-ai-text-primary"
+                  className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-ai-text-primary outline-none ring-accent/40 placeholder:text-ai-text-secondary focus:border-accent focus:ring-2 focus:shadow-[0_0_8px_rgba(34,211,238,0.25)] dark:border-slate-700 dark:bg-ai-surface dark:text-ai-text-primary"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -170,7 +170,7 @@ export function Contact() {
                 id="github"
                 name="github"
                 type="text"
-                className="mt-1 w-full rounded-xl border border-ai-border bg-ai-surface px-3 py-2 text-sm text-ai-text-primary outline-none ring-accent/40 placeholder:text-ai-text-secondary focus:border-accent focus:ring-2 dark:border-ai-border dark:bg-ai-card dark:text-ai-text-primary"
+                className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-ai-text-primary outline-none ring-accent/40 placeholder:text-ai-text-secondary focus:border-accent focus:ring-2 focus:shadow-[0_0_8px_rgba(34,211,238,0.25)] dark:border-slate-700 dark:bg-ai-surface dark:text-ai-text-primary"
                 placeholder="your-github-username or profile link"
                 value={github}
                 onChange={(e) => setGithub(e.target.value)}
@@ -189,7 +189,7 @@ export function Contact() {
                 id="message"
                 name="message"
                 rows={4}
-                className="mt-1 w-full rounded-xl border border-ai-border bg-ai-surface px-3 py-2 text-sm text-ai-text-primary outline-none ring-accent/40 placeholder:text-ai-text-secondary focus:border-accent focus:ring-2 dark:border-ai-border dark:bg-ai-card dark:text-ai-text-primary"
+                className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-ai-text-primary outline-none ring-accent/40 placeholder:text-ai-text-secondary focus:border-accent focus:ring-2 focus:shadow-[0_0_8px_rgba(34,211,238,0.25)] dark:border-slate-700 dark:bg-ai-surface dark:text-ai-text-primary"
                 placeholder="Tell me about your project or opportunity..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}

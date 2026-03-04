@@ -22,7 +22,7 @@ export function Sidebar({ activeSection, sectionIds = [], onSectionClick }) {
 
   return (
     <div className="pointer-events-none fixed left-4 top-24 z-30 hidden select-none md:block">
-      <div className="pointer-events-auto w-56 space-y-4 rounded-2xl border border-ai-border bg-ai-card/60 p-6 shadow-lg backdrop-blur">
+      <div className="pointer-events-auto w-56 space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-lg backdrop-blur dark:border-slate-700 dark:bg-ai-card">
         {/* Heading text intentionally removed to keep layout minimal while preserving spacing */}
         <div className="h-4" />
 

@@ -9,21 +9,21 @@ module.exports = {
       },
       colors: {
         accent: {
-          DEFAULT: '#22d3ee',
-          soft: '#06b6d4',
+          DEFAULT: 'rgb(var(--accent) / <alpha-value>)',
+          soft: 'rgb(var(--accent-soft) / <alpha-value>)',
         },
         surface: {
-          light: '#020617',
-          dark: '#020617',
+          light: 'rgb(var(--ai-navy) / <alpha-value>)',
+          dark: 'rgb(var(--ai-navy) / <alpha-value>)',
         },
-        'ai-navy': '#020617',
-        'ai-surface': '#0f172a',
-        'ai-card': '#1e293b',
-        'ai-violet': '#22d3ee',
-        'ai-violet-glow': '#67e8f9',
-        'ai-text-primary': '#e2e8f0',
-        'ai-text-secondary': '#94a3b8',
-        'ai-border': 'rgba(148,163,184,0.15)',
+        'ai-navy': 'rgb(var(--ai-navy) / <alpha-value>)',
+        'ai-surface': 'rgb(var(--ai-surface) / <alpha-value>)',
+        'ai-card': 'rgb(var(--ai-card) / <alpha-value>)',
+        'ai-violet': 'rgb(var(--ai-violet) / <alpha-value>)',
+        'ai-violet-glow': 'rgb(var(--ai-violet-glow) / <alpha-value>)',
+        'ai-text-primary': 'rgb(var(--ai-text-primary) / <alpha-value>)',
+        'ai-text-secondary': 'rgb(var(--ai-text-secondary) / <alpha-value>)',
+        'ai-border': 'rgb(148 163 184 / 0.15)',
       },
       backgroundImage: {
         'hero-gradient':
