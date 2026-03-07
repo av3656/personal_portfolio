@@ -28,6 +28,7 @@ export function TechStack() {
   const containerRef = useRef(null)
   const svgRef = useRef(null)
   const [isMobile, setIsMobile] = useState(false)
+  const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined
@@ -39,6 +40,18 @@ export function TechStack() {
   }, [])
 
   useEffect(() => {
+    if (typeof window === 'undefined') return undefined
+    const root = window.document.documentElement
+    const syncTheme = () => setIsDark(root.classList.contains('dark'))
+    syncTheme()
+
+    const observer = new MutationObserver(syncTheme)
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] })
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
     const container = containerRef.current
     const svgElement = svgRef.current
     if (!container || !svgElement) return undefined
@@ -47,6 +60,9 @@ export function TechStack() {
     const height = container.clientHeight || 420
     const centerX = width / 2
     const centerY = height / 2
+    const lineColor = isDark ? 'rgba(34,211,238,0.7)' : 'rgba(148,163,184,0.7)'
+    const edgeColor = isDark ? 'rgba(56,189,248,0.35)' : 'rgba(148,163,184,0.7)'
+    const labelColor = isDark ? 'rgb(103,232,249)' : 'rgb(51,65,85)'
 
     const nodes = NODES.map((node) => ({ ...node, x: centerX, y: centerY, scale: 1 }))
     const links = LINKS.map((link) => ({ ...link }))
@@ -85,8 +101,9 @@ export function TechStack() {
       .data(links)
       .enter()
       .append('line')
-      .attr('stroke', 'rgba(56,189,248,0.35)')
+      .attr('stroke', lineColor)
       .attr('stroke-width', 1.6)
+      .attr('opacity', 0.7)
       .attr('filter', 'url(#line-glow)')
 
     const particleSelection = particleLayer
@@ -131,10 +148,12 @@ export function TechStack() {
     nodeSelection
       .append('text')
       .attr('text-anchor', 'middle')
-      .attr('dy', (d) => d.radius + 18)
-      .attr('fill', 'rgba(200,230,255,0.85)')
-      .attr('font-size', 12)
+      .attr('dominant-baseline', 'hanging')
+      .attr('dy', (d) => d.radius + 8)
+      .attr('fill', labelColor)
+      .attr('font-size', 11)
       .attr('font-weight', 500)
+      .attr('letter-spacing', 0.4)
       .text((d) => d.id)
 
     const linkForce = d3
@@ -214,7 +233,7 @@ export function TechStack() {
           const tid = line.target.id
           return sid === hovered.id || tid === hovered.id
             ? 'rgba(56,189,248,0.9)'
-            : 'rgba(56,189,248,0.18)'
+            : edgeColor
         })
         nodeSelection.select('circle').attr('style', (d) => {
           const intense = d.id === hovered.id ? '0.95' : '0.55'
@@ -224,7 +243,7 @@ export function TechStack() {
       })
       .on('mouseleave', (_, hovered) => {
         hovered.scale = 1
-        lineSelection.attr('stroke', 'rgba(56,189,248,0.35)')
+        lineSelection.attr('stroke', lineColor)
         nodeSelection.select('circle').attr('style', 'filter: drop-shadow(0 0 16px rgba(56,189,248,0.55));')
         requestRender()
       })
@@ -254,7 +273,7 @@ export function TechStack() {
       if (rafId) cancelAnimationFrame(rafId)
       svg.selectAll('*').remove()
     }
-  }, [isMobile])
+  }, [isMobile, isDark])
 
   return (
     <section

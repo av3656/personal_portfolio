@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { SiChessdotcom, SiLichess } from 'react-icons/si'
 import { ProfileFlipCard } from '../ProfileFlipCard'
+import { useChessRatings } from '../../hooks/useChessRatings'
 
 const container = {
   hidden: { opacity: 0, y: 40 },
@@ -12,6 +14,42 @@ const container = {
 }
 
 export function Hero() {
+  const { ratings, loading, error } = useChessRatings()
+
+  const RatingsCard = ({ title, icon: Icon, rows }) => (
+    <motion.div
+      whileHover={{ scale: 1.04 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className="flex h-full w-full flex-col rounded-[14px] rounded-xl border border-cyan-500/20 border-slate-200 bg-[rgba(15,23,42,0.8)] bg-white p-5 shadow-[0_0_30px_rgba(56,189,248,0.22)] shadow-lg transition duration-300 dark:border-slate-700 dark:bg-slate-800 dark:shadow-none"
+    >
+      <div className="mb-3 flex items-center gap-2">
+        <Icon
+          size={18}
+          className="text-slate-700 dark:text-cyan-300"
+          aria-hidden="true"
+        />
+        <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-200">{title}</h3>
+      </div>
+
+      {loading ? (
+        <div className="text-xs text-ai-text-secondary dark:text-ai-text-secondary">Loading ratings...</div>
+      ) : error ? (
+        <div className="text-xs text-ai-text-secondary dark:text-ai-text-secondary">Ratings unavailable</div>
+      ) : (
+        <div className="mt-1 flex flex-col gap-2">
+          {rows.map((row) => (
+            <div key={row.label} className="flex items-center justify-between text-sm">
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-400">{row.label}</span>
+              <span className="rounded-full bg-cyan-100 px-3 py-1 font-semibold text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300">
+                {row.value ?? '--'}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </motion.div>
+  )
+
   return (
     <section
       id="intro"
@@ -23,7 +61,7 @@ export function Hero() {
         variants={container}
         initial="hidden"
         animate="visible"
-        className="mx-auto flex max-w-6xl flex-col items-start gap-10 md:flex-row md:items-center"
+        className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-center"
       >
         <div className="flex-1 space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-ai-text-secondary dark:text-ai-text-secondary">
@@ -35,11 +73,17 @@ export function Hero() {
           </h1>
 
           <p className="max-w-xl text-balance text-sm text-ai-text-secondary sm:text-base dark:text-ai-text-secondary">
-            I&apos;m an engineering student and aspiring software engineer focused on{' '}
-            <span className="font-medium">clean backend systems</span>,{' '}
-            <span className="font-medium">Java</span>, and{' '}
-            <span className="font-medium">scalable cloud-ready architectures</span> — with a love for
-            badminton, chess, and thoughtfully crafted web experiences.
+            I&apos;m an engineering student and aspiring software engineer focused on building clean
+            backend systems with Java and scalable cloud-ready architectures. I enjoy designing APIs,
+            structuring backend services, and thinking about how systems behave under real-world load.
+            <br />
+            <br />
+            Beyond coding, I approach engineering the same way I approach chess — carefully analyzing
+            positions, planning several moves ahead, and constantly refining strategies to reach better
+            solutions.
+          </p>
+          <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">
+            Currently exploring system architecture, distributed systems, and scalable backend design.
           </p>
 
           <div className="flex flex-wrap gap-3">
@@ -74,9 +118,42 @@ export function Hero() {
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6, ease: 'easeOut' }}
-          className="mt-4 flex flex-1 items-center justify-center md:mt-0"
+          className="mt-4 w-full lg:mt-0 lg:justify-self-end"
         >
-          <ProfileFlipCard />
+          <div className="w-full max-w-[520px] space-y-5 rounded-3xl border border-[rgba(56,189,248,0.18)] border-slate-200 bg-[rgba(15,23,42,0.55)] bg-white/70 p-6 shadow-[0_0_35px_rgba(56,189,248,0.18)] backdrop-blur-lg backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/40">
+            <div className="mb-6 flex justify-center">
+              <div className="flex h-[180px] w-[180px] items-center justify-center">
+                <div className="scale-[0.7]">
+                  <ProfileFlipCard />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <RatingsCard
+                title="Lichess Rating"
+                icon={SiLichess}
+                rows={[
+                  { label: 'Rapid', value: ratings.lichess.rapid },
+                  { label: 'Puzzle', value: ratings.lichess.puzzle },
+                ]}
+              />
+              <RatingsCard
+                title="Chess.com Rating"
+                icon={SiChessdotcom}
+                rows={[
+                  { label: 'Rapid', value: ratings.chesscom.rapid },
+                  { label: 'Blitz', value: ratings.chesscom.blitz },
+                  { label: 'Puzzle', value: ratings.chesscom.puzzle },
+                ]}
+              />
+            </div>
+
+            <p className="mt-4 text-center text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+              Strategic thinking from chess influences my approach to system design and problem
+              solving.
+            </p>
+          </div>
         </motion.div>
       </motion.div>
 
