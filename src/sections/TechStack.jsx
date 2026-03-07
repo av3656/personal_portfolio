@@ -64,7 +64,13 @@ export function TechStack() {
     const edgeColor = isDark ? 'rgba(56,189,248,0.35)' : 'rgba(148,163,184,0.7)'
     const labelColor = isDark ? 'rgb(103,232,249)' : 'rgb(51,65,85)'
 
-    const nodes = NODES.map((node) => ({ ...node, x: centerX, y: centerY, scale: 1 }))
+    const nodes = NODES.map((node, index) => ({
+      ...node,
+      x: centerX,
+      y: centerY,
+      scale: 1,
+      phase: index * 0.9,
+    }))
     const links = LINKS.map((link) => ({ ...link }))
 
     const svg = d3.select(svgElement)
@@ -192,38 +198,74 @@ export function TechStack() {
 
     let rafId = null
     const dataStart = performance.now()
+    const pulseRange = { min: 0.4, max: 0.9 }
+    const floatRadius = isMobile ? 5 : 8
+    const flowDuration = 3
 
-    const render = () => {
+    const getNodeOffset = (node, elapsed) => ({
+      x: Math.sin(elapsed * 0.65 + node.phase) * floatRadius,
+      y: Math.cos(elapsed * 0.75 + node.phase * 1.1) * (floatRadius * 0.85),
+    })
+
+    const render = (now) => {
+      const elapsed = (now - dataStart) / 1000
+      const pulse =
+        pulseRange.min +
+        ((Math.sin((Math.PI * 2 * elapsed) / 3) + 1) / 2) * (pulseRange.max - pulseRange.min)
+
       lineSelection
-        .attr('x1', (d) => d.source.x)
-        .attr('y1', (d) => d.source.y)
-        .attr('x2', (d) => d.target.x)
-        .attr('y2', (d) => d.target.y)
+        .attr('x1', (d) => {
+          const offset = getNodeOffset(d.source, elapsed)
+          return d.source.x + offset.x
+        })
+        .attr('y1', (d) => {
+          const offset = getNodeOffset(d.source, elapsed)
+          return d.source.y + offset.y
+        })
+        .attr('x2', (d) => {
+          const offset = getNodeOffset(d.target, elapsed)
+          return d.target.x + offset.x
+        })
+        .attr('y2', (d) => {
+          const offset = getNodeOffset(d.target, elapsed)
+          return d.target.y + offset.y
+        })
+        .attr('opacity', (d) => {
+          const phasePulse = 0.08 * Math.sin(elapsed + d.source.phase)
+          return Math.max(0.35, Math.min(0.95, pulse + phasePulse))
+        })
 
-      const elapsed = (performance.now() - dataStart) / 1000
       particleSelection
         .attr('cx', (d, i) => {
-          const t = ((elapsed + i * 0.3) % 3) / 3
-          return d.source.x + (d.target.x - d.source.x) * t
+          const sourceOffset = getNodeOffset(d.source, elapsed)
+          const targetOffset = getNodeOffset(d.target, elapsed)
+          const sourceX = d.source.x + sourceOffset.x
+          const targetX = d.target.x + targetOffset.x
+          const t = ((elapsed + i * 0.3) % flowDuration) / flowDuration
+          return sourceX + (targetX - sourceX) * t
         })
         .attr('cy', (d, i) => {
-          const t = ((elapsed + i * 0.3) % 3) / 3
-          return d.source.y + (d.target.y - d.source.y) * t
+          const sourceOffset = getNodeOffset(d.source, elapsed)
+          const targetOffset = getNodeOffset(d.target, elapsed)
+          const sourceY = d.source.y + sourceOffset.y
+          const targetY = d.target.y + targetOffset.y
+          const t = ((elapsed + i * 0.3) % flowDuration) / flowDuration
+          return sourceY + (targetY - sourceY) * t
         })
 
-      nodeSelection.attr('transform', (d) => `translate(${d.x},${d.y}) scale(${d.scale || 1})`)
-    }
-
-    const requestRender = () => {
-      if (rafId) return
-      rafId = requestAnimationFrame(() => {
-        rafId = null
-        render()
+      nodeSelection.attr('transform', (d) => {
+        const offset = getNodeOffset(d, elapsed)
+        return `translate(${d.x + offset.x},${d.y + offset.y}) scale(${d.scale || 1})`
       })
     }
 
-    simulation.on('tick', requestRender)
-    requestRender()
+    const animate = (now) => {
+      render(now)
+      rafId = requestAnimationFrame(animate)
+    }
+
+    simulation.on('tick', () => {})
+    rafId = requestAnimationFrame(animate)
 
     nodeSelection
       .on('mouseenter', (_, hovered) => {
@@ -239,13 +281,11 @@ export function TechStack() {
           const intense = d.id === hovered.id ? '0.95' : '0.55'
           return `filter: drop-shadow(0 0 16px rgba(56,189,248,${intense}));`
         })
-        requestRender()
       })
       .on('mouseleave', (_, hovered) => {
         hovered.scale = 1
         lineSelection.attr('stroke', lineColor)
         nodeSelection.select('circle').attr('style', 'filter: drop-shadow(0 0 16px rgba(56,189,248,0.55));')
-        requestRender()
       })
 
     const drag = d3
@@ -258,7 +298,6 @@ export function TechStack() {
       .on('drag', (event, d) => {
         d.fx = event.x
         d.fy = event.y
-        requestRender()
       })
       .on('end', (event, d) => {
         if (!event.active) simulation.alphaTarget(0)

@@ -1,8 +1,11 @@
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SiChessdotcom, SiLichess } from 'react-icons/si'
 import { ProfileFlipCard } from '../ProfileFlipCard'
 import { useChessRatings } from '../../hooks/useChessRatings'
+import { HeroKnightBackground } from '../HeroKnightBackground'
+import { RatingSparkline } from '../RatingSparkline'
 
 const container = {
   hidden: { opacity: 0, y: 40 },
@@ -13,22 +16,114 @@ const container = {
   },
 }
 
+function getRatingColor(rating) {
+  if (typeof rating !== 'number') {
+    return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300'
+  }
+  if (rating < 1000) {
+    return 'bg-gray-200 text-gray-700 dark:bg-gray-800/40 dark:text-gray-300'
+  }
+  if (rating <= 1399) {
+    return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+  }
+  if (rating <= 1799) {
+    return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+  }
+  if (rating <= 1999) {
+    return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
+  }
+  return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'
+}
+
+function getRatingTier(rating) {
+  if (typeof rating !== 'number') return 'Rating unavailable'
+  if (rating < 1000) return 'Beginner'
+  if (rating <= 1399) return 'Intermediate'
+  if (rating <= 1799) return 'Club Player'
+  if (rating <= 1999) return 'Expert'
+  return 'Master Level'
+}
+
+function calculateRatingPercent(rating) {
+  const safeRating = typeof rating === 'number' ? rating : 0
+  const min = 0
+  const max = 2500
+  const percent = ((safeRating - min) / (max - min)) * 100
+  return Math.max(0, Math.min(100, percent))
+}
+
+function useAnimatedNumber(value, duration = 800) {
+  const [displayValue, setDisplayValue] = useState(0)
+
+  useEffect(() => {
+    if (typeof value !== 'number') {
+      setDisplayValue(0)
+      return
+    }
+
+    let frameId = 0
+    let startTime = 0
+
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp
+      const progress = Math.min((timestamp - startTime) / duration, 1)
+      setDisplayValue(Math.round(progress * value))
+      if (progress < 1) {
+        frameId = requestAnimationFrame(step)
+      }
+    }
+
+    frameId = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(frameId)
+  }, [value, duration])
+
+  return displayValue
+}
+
+function RatingRow({ label, value, history = [] }) {
+  const animatedValue = useAnimatedNumber(value)
+  const percent = calculateRatingPercent(value)
+  const [showProgress, setShowProgress] = useState(false)
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => setShowProgress(true), 50)
+    return () => clearTimeout(timeoutId)
+  }, [value])
+
+  return (
+    <div className="text-sm">
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{label}</span>
+        <span
+          className={`rounded-full px-3 py-1 font-semibold ${getRatingColor(value)}`}
+          title={getRatingTier(value)}
+        >
+          {typeof value === 'number' ? animatedValue : '--'}
+        </span>
+      </div>
+      <div className="mt-1 h-1.5 w-full overflow-hidden rounded bg-gray-200 opacity-80 dark:bg-slate-700">
+        <div
+          className="h-full bg-accent transition-all duration-1000 ease-out"
+          style={{ width: `${showProgress ? percent : 0}%` }}
+        />
+      </div>
+      <RatingSparkline ratings={history} />
+    </div>
+  )
+}
+
 export function Hero() {
-  const { ratings, loading, error } = useChessRatings()
+  const { ratings, history, loading, error } = useChessRatings('aman-avr', 'av3656')
 
   const RatingsCard = ({ title, icon: Icon, rows }) => (
     <motion.div
       whileHover={{ scale: 1.04 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="flex h-full w-full flex-col rounded-[14px] rounded-xl border border-cyan-500/20 border-slate-200 bg-[rgba(15,23,42,0.8)] bg-white p-5 shadow-[0_0_30px_rgba(56,189,248,0.22)] shadow-lg transition duration-300 dark:border-slate-700 dark:bg-slate-800 dark:shadow-none"
+      className="flex h-full w-full flex-col rounded-xl border border-slate-200 bg-white p-5 shadow-md transition duration-300 dark:border-slate-600 dark:bg-slate-700 dark:shadow-none"
     >
       <div className="mb-3 flex items-center gap-2">
-        <Icon
-          size={18}
-          className="text-slate-700 dark:text-cyan-300"
-          aria-hidden="true"
-        />
-        <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-200">{title}</h3>
+        <Icon size={18} className="text-slate-700 dark:text-cyan-300" aria-hidden="true" />
+        <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">{title}</h3>
       </div>
 
       {loading ? (
@@ -38,12 +133,7 @@ export function Hero() {
       ) : (
         <div className="mt-1 flex flex-col gap-2">
           {rows.map((row) => (
-            <div key={row.label} className="flex items-center justify-between text-sm">
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-400">{row.label}</span>
-              <span className="rounded-full bg-cyan-100 px-3 py-1 font-semibold text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300">
-                {row.value ?? '--'}
-              </span>
-            </div>
+            <RatingRow key={row.label} label={row.label} value={row.value} history={row.history} />
           ))}
         </div>
       )}
@@ -57,11 +147,12 @@ export function Hero() {
       aria-label="Introduction"
     >
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ai-navy via-ai-navy/95 to-ai-surface dark:from-ai-navy dark:via-ai-navy dark:to-ai-surface" />
+      <HeroKnightBackground />
       <motion.div
         variants={container}
         initial="hidden"
         animate="visible"
-        className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-center"
+        className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 items-start gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-center"
       >
         <div className="flex-1 space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-ai-text-secondary dark:text-ai-text-secondary">
@@ -134,17 +225,17 @@ export function Hero() {
                 title="Lichess Rating"
                 icon={SiLichess}
                 rows={[
-                  { label: 'Rapid', value: ratings.lichess.rapid },
-                  { label: 'Puzzle', value: ratings.lichess.puzzle },
+                  { label: 'Rapid', value: ratings.lichess.rapid, history: history.rapid },
+                  { label: 'Puzzle', value: ratings.lichess.puzzle, history: history.puzzle },
                 ]}
               />
               <RatingsCard
                 title="Chess.com Rating"
                 icon={SiChessdotcom}
                 rows={[
-                  { label: 'Rapid', value: ratings.chesscom.rapid },
-                  { label: 'Blitz', value: ratings.chesscom.blitz },
-                  { label: 'Puzzle', value: ratings.chesscom.puzzle },
+                  { label: 'Rapid', value: ratings.chesscom.rapid, history: history.rapid },
+                  { label: 'Blitz', value: ratings.chesscom.blitz, history: [] },
+                  { label: 'Puzzle', value: ratings.chesscom.puzzle, history: history.puzzle },
                 ]}
               />
             </div>

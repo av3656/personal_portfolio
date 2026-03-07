@@ -1,4 +1,9 @@
 import { useEffect, useState } from 'react'
+import {
+  getChessComRatings,
+  getLichessRatingHistory,
+  getLichessRatings,
+} from '../services/chessRatings'
 
 const INITIAL_RATINGS = {
   chesscom: {
@@ -12,49 +17,51 @@ const INITIAL_RATINGS = {
   },
 }
 
-export function useChessRatings() {
+const REFRESH_INTERVAL_MS = 10 * 60 * 1000
+const INITIAL_HISTORY = {
+  rapid: [],
+  puzzle: [],
+}
+
+export function useChessRatings(chessUsername = 'aman-avr', lichessUsername = 'av3656') {
   const [ratings, setRatings] = useState(INITIAL_RATINGS)
+  const [history, setHistory] = useState(INITIAL_HISTORY)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [lastUpdated, setLastUpdated] = useState(null)
 
   useEffect(() => {
-    const abortController = new AbortController()
+    let activeController = null
 
     const fetchRatings = async () => {
       setLoading(true)
       setError(false)
+      activeController?.abort()
+      activeController = new AbortController()
 
       try {
-        const [chessRes, lichessRes] = await Promise.all([
-          fetch('https://api.chess.com/pub/player/aman-avr/stats', {
-            signal: abortController.signal,
-          }),
-          fetch('https://lichess.org/api/user/av3656', {
-            signal: abortController.signal,
-            headers: {
-              Accept: 'application/json',
-            },
-          }),
+        const [chessRes, lichessRes, lichessHistoryRes] = await Promise.all([
+          getChessComRatings(chessUsername, activeController.signal),
+          getLichessRatings(lichessUsername, activeController.signal),
+          getLichessRatingHistory(lichessUsername, activeController.signal),
         ])
-
-        if (!chessRes.ok || !lichessRes.ok) {
-          throw new Error('Failed to fetch chess ratings')
-        }
-
-        const chessData = await chessRes.json()
-        const lichessData = await lichessRes.json()
 
         setRatings({
           chesscom: {
-            rapid: chessData?.chess_rapid?.last?.rating ?? null,
-            blitz: chessData?.chess_blitz?.last?.rating ?? null,
-            puzzle: chessData?.tactics?.highest?.rating ?? null,
+            rapid: chessRes.rapid,
+            blitz: chessRes.blitz,
+            puzzle: chessRes.puzzle,
           },
           lichess: {
-            rapid: lichessData?.perfs?.rapid?.rating ?? null,
-            puzzle: lichessData?.perfs?.puzzle?.rating ?? null,
+            rapid: lichessRes.rapid,
+            puzzle: lichessRes.puzzle,
           },
         })
+        setHistory({
+          rapid: lichessHistoryRes.rapid,
+          puzzle: lichessHistoryRes.puzzle,
+        })
+        setLastUpdated(new Date())
       } catch (err) {
         if (err.name !== 'AbortError') {
           setError(true)
@@ -65,9 +72,13 @@ export function useChessRatings() {
     }
 
     fetchRatings()
+    const intervalId = setInterval(fetchRatings, REFRESH_INTERVAL_MS)
 
-    return () => abortController.abort()
-  }, [])
+    return () => {
+      clearInterval(intervalId)
+      activeController?.abort()
+    }
+  }, [chessUsername, lichessUsername])
 
-  return { ratings, loading, error }
+  return { ratings, history, loading, error, lastUpdated }
 }
