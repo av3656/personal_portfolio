@@ -135,21 +135,6 @@ section + section {
   }
 }
 
-@keyframes heroTourRingPulse {
-  0% {
-    opacity: 0.15;
-    transform: scale(0.85);
-  }
-  50% {
-    opacity: 0.42;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0.1;
-    transform: scale(0.9);
-  }
-}
-
 .hero-tour-grid {
   opacity: 0.32;
 }
@@ -186,17 +171,6 @@ section + section {
 .hero-tour-node-new {
   transform-origin: center;
   animation: heroTourNodePulse 1.2s ease-out;
-}
-
-.hero-tour-active-ring {
-  fill: rgba(0, 140, 200, 0.38);
-  filter: drop-shadow(0 0 8px rgba(0, 140, 200, 0.45));
-  animation: heroTourRingPulse 1.5s ease-out;
-}
-
-.dark .hero-tour-active-ring {
-  fill: rgba(120, 220, 255, 0.42);
-  filter: drop-shadow(0 0 8px rgba(120, 220, 255, 0.7));
 }
 
 .hero-tour-fade {
@@ -238,4 +212,9 @@ section + section {
   fill: rgb(var(--accent));
   filter: drop-shadow(0 0 6px rgba(120, 220, 255, 0.65));
   animation: architecturePulse 3s ease-in-out infinite;
+}
+
+.architecture-flow-node {
+  fill: rgb(var(--accent));
+  opacity: 0.45;
 }

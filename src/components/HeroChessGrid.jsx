@@ -21,9 +21,6 @@ export function HeroChessGrid({
     to,
     id: `${index}-${to.row}-${to.col}`,
   }))
-  const activeSquare = visitedSquares[visitedSquares.length - 1] || null
-  const activePoint = activeSquare ? getCellCenter(board, activeSquare) : null
-
   return (
     <div
       className={`pointer-events-none absolute inset-0 z-0 overflow-hidden ${phase === 'fade' ? 'hero-tour-fade' : ''}`}
@@ -87,14 +84,6 @@ export function HeroChessGrid({
           )
         })}
 
-        {activePoint ? (
-          <circle
-            cx={activePoint.x}
-            cy={activePoint.y}
-            r={Math.min(board.cellWidth, board.cellHeight) * 0.34}
-            className="hero-tour-active-ring"
-          />
-        ) : null}
       </svg>
     </div>
   )
