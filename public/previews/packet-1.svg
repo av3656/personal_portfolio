@@ -1,0 +1,10 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#1e293b"/>
+  <text x="200" y="150" text-anchor="middle" fill="white" font-family="monospace" font-size="14">Network Packet Analyzer</text>
+  <rect x="50" y="100" width="300" height="100" fill="none" stroke="#22d3ee" stroke-width="2"/>
+  <circle cx="100" cy="150" r="5" fill="#22d3ee"/>
+  <circle cx="200" cy="150" r="5" fill="#22d3ee"/>
+  <circle cx="300" cy="150" r="5" fill="#22d3ee"/>
+  <line x1="100" y1="150" x2="200" y2="150" stroke="#22d3ee" stroke-width="1"/>
+  <line x1="200" y1="150" x2="300" y2="150" stroke="#22d3ee" stroke-width="1"/>
+</svg>

@@ -1,0 +1,25 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#1e293b"/>
+  <text x="200" y="30" text-anchor="middle" fill="white" font-family="monospace" font-size="14">Algorithm Visualization</text>
+  <rect x="50" y="60" width="60" height="40" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
+  <text x="80" y="85" text-anchor="middle" fill="white" font-family="monospace" font-size="10">64</text>
+  <rect x="120" y="60" width="60" height="40" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
+  <text x="150" y="85" text-anchor="middle" fill="white" font-family="monospace" font-size="10">34</text>
+  <rect x="190" y="60" width="60" height="40" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
+  <text x="220" y="85" text-anchor="middle" fill="white" font-family="monospace" font-size="10">25</text>
+  <rect x="260" y="60" width="60" height="40" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
+  <text x="290" y="85" text-anchor="middle" fill="white" font-family="monospace" font-size="10">12</text>
+  <rect x="330" y="60" width="60" height="40" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
+  <text x="360" y="85" text-anchor="middle" fill="white" font-family="monospace" font-size="10">22</text>
+  <text x="200" y="140" text-anchor="middle" fill="#22d3ee" font-family="monospace" font-size="10">Quick Sort in Progress</text>
+  <rect x="50" y="160" width="60" height="40" fill="#22d3ee" stroke="#22d3ee" stroke-width="2"/>
+  <text x="80" y="185" text-anchor="middle" fill="#1e293b" font-family="monospace" font-size="10">12</text>
+  <rect x="120" y="160" width="60" height="40" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
+  <text x="150" y="185" text-anchor="middle" fill="white" font-family="monospace" font-size="10">22</text>
+  <rect x="190" y="160" width="60" height="40" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
+  <text x="220" y="185" text-anchor="middle" fill="white" font-family="monospace" font-size="10">25</text>
+  <rect x="260" y="160" width="60" height="40" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
+  <text x="290" y="185" text-anchor="middle" fill="white" font-family="monospace" font-size="10">34</text>
+  <rect x="330" y="160" width="60" height="40" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
+  <text x="360" y="185" text-anchor="middle" fill="white" font-family="monospace" font-size="10">64</text>
+</svg>

@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { FaDatabase } from 'react-icons/fa'
-import { FaHardDrive, FaLock, FaServer } from 'react-icons/fa6'
+import { FaHardDrive, FaLock, FaServer, FaExpand, FaCompress } from 'react-icons/fa6'
 import { SiApachekafka, SiPostgresql, SiRedis, SiSpringboot } from 'react-icons/si'
 import { Reveal } from '../components/ui/Reveal'
 
@@ -10,10 +10,13 @@ const NODE_HEIGHT = 62
 const EVOLUTION_STEP_MS = 3800
 const PULSE_SEGMENT_DURATION_MS = 2000
 const SCALE_STAGE_MS = 2000
-const MIN_NODE_SPACING = 140
-const BACKEND_VERTICAL_SPACING = 70
-const QUEUE_HORIZONTAL_SPACING = 120
-const DB_REPLICA_SPACING = 110
+const MIN_NODE_SPACING = 180
+const LAYER_SPACING = 180
+const BACKEND_VERTICAL_SPACING = 80
+const WORKER_HORIZONTAL_SPACING = 140
+const QUEUE_HORIZONTAL_SPACING = 140
+const DB_REPLICA_SPACING = 160
+const MIN_CANVAS_WIDTH = 1400
 
 const BASE_NODES = [
   {
@@ -724,6 +727,124 @@ const ATTACK_STAGES = [
   },
 ]
 
+const FAILURE_STAGES = [
+  {
+    // Stage 1: DB Primary Fails
+    label: 'db-failure',
+    crashedNodes: ['dbPrimary'],
+    visible: ['client', 'apiGateway', 'loadBalancer', 'backend1', 'backend2', 'backend3', 'cache', 'dbPrimary', 'dbReplica1', 'dbReplica2'],
+    connections: [
+      ['client', 'apiGateway'],
+      ['apiGateway', 'loadBalancer'],
+      ['loadBalancer', 'backend1'],
+      ['loadBalancer', 'backend2'],
+      ['loadBalancer', 'backend3'],
+      ['backend1', 'cache'],
+      ['backend2', 'cache'],
+      ['backend3', 'cache'],
+      ['backend1', 'dbReplica1'],
+      ['backend2', 'dbReplica2'],
+      ['backend3', 'dbReplica1'],
+    ],
+    routeOptions: [
+      ['client', 'apiGateway', 'loadBalancer', 'backend1', 'cache'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend2', 'cache'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend3', 'cache'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend1', 'dbReplica1'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend2', 'dbReplica2'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend3', 'dbReplica1'],
+    ],
+    spawnInterval: 500,
+  },
+  {
+    // Stage 2: Cache Also Fails
+    label: 'cache-failure',
+    crashedNodes: ['dbPrimary', 'cache'],
+    visible: ['client', 'apiGateway', 'loadBalancer', 'backend1', 'backend2', 'backend3', 'cache', 'dbPrimary', 'dbReplica1', 'dbReplica2'],
+    connections: [
+      ['client', 'apiGateway'],
+      ['apiGateway', 'loadBalancer'],
+      ['loadBalancer', 'backend1'],
+      ['loadBalancer', 'backend2'],
+      ['loadBalancer', 'backend3'],
+      ['backend1', 'dbReplica1'],
+      ['backend2', 'dbReplica2'],
+      ['backend3', 'dbReplica1'],
+    ],
+    routeOptions: [
+      ['client', 'apiGateway', 'loadBalancer', 'backend1', 'dbReplica1'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend2', 'dbReplica2'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend3', 'dbReplica1'],
+    ],
+    spawnInterval: 700,
+  },
+  {
+    // Stage 3: Backend Instance 1 Fails
+    label: 'backend-failure',
+    crashedNodes: ['dbPrimary', 'cache', 'backend1'],
+    visible: ['client', 'apiGateway', 'loadBalancer', 'backend1', 'backend2', 'backend3', 'cache', 'dbPrimary', 'dbReplica1', 'dbReplica2'],
+    connections: [
+      ['client', 'apiGateway'],
+      ['apiGateway', 'loadBalancer'],
+      ['loadBalancer', 'backend2'],
+      ['loadBalancer', 'backend3'],
+      ['backend2', 'dbReplica2'],
+      ['backend3', 'dbReplica1'],
+    ],
+    routeOptions: [
+      ['client', 'apiGateway', 'loadBalancer', 'backend2', 'dbReplica2'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend3', 'dbReplica1'],
+    ],
+    spawnInterval: 400,
+  },
+  {
+    // Stage 4: Recovering
+    label: 'recovering',
+    crashedNodes: [],
+    visible: ['client', 'apiGateway', 'loadBalancer', 'backend1', 'backend2', 'backend3', 'cache', 'dbPrimary', 'dbReplica1', 'dbReplica2'],
+    connections: [
+      ['client', 'apiGateway'],
+      ['apiGateway', 'loadBalancer'],
+      ['loadBalancer', 'backend1'],
+      ['loadBalancer', 'backend2'],
+      ['loadBalancer', 'backend3'],
+      ['backend1', 'cache'],
+      ['backend2', 'cache'],
+      ['backend3', 'dbPrimary'],
+      ['backend1', 'dbReplica1'],
+      ['backend2', 'dbReplica2'],
+    ],
+    routeOptions: [
+      ['client', 'apiGateway', 'loadBalancer', 'backend1', 'cache'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend2', 'cache'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend3', 'cache'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend3', 'dbPrimary'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend1', 'dbReplica1'],
+      ['client', 'apiGateway', 'loadBalancer', 'backend2', 'dbReplica2'],
+    ],
+    spawnInterval: 400,
+  }
+]
+
+function getBezierPath(x1, y1, x2, y2) {
+  // Add organic curve based on distance
+  const distance = Math.abs(x2 - x1)
+  const magic = Math.max(distance * 0.4, 60)
+  return `M ${x1} ${y1} C ${x1 + magic} ${y1}, ${x2 - magic} ${y2}, ${x2} ${y2}`
+}
+
+function getPointOnBezier(p0, p1, p2, p3, t) {
+  const mt = 1 - t
+  const mt2 = mt * mt
+  const mt3 = mt2 * mt
+  const t2 = t * t
+  const t3 = t2 * t
+  return {
+    x: mt3 * p0.x + 3 * mt2 * t * p1.x + 3 * mt * t2 * p2.x + t3 * p3.x,
+    y: mt3 * p0.y + 3 * mt2 * t * p1.y + 3 * mt * t2 * p2.y + t3 * p3.y,
+  }
+}
+
 const ArchitectureLinks = memo(function ArchitectureLinks({ linkGeometries, trafficPulses }) {
   const pointsByNode = useMemo(() => {
     const map = {}
@@ -734,33 +855,51 @@ const ArchitectureLinks = memo(function ArchitectureLinks({ linkGeometries, traf
     return map
   }, [linkGeometries])
 
-  const pulseDots = useMemo(
-    () =>
-      trafficPulses
-        .map((pulse) => {
-          const from = pointsByNode[pulse.route[pulse.segmentIndex]]
-          const to = pointsByNode[pulse.route[pulse.segmentIndex + 1]]
-          if (!from || !to) return null
-          return {
-            id: pulse.id,
-            x: from.x + (to.x - from.x) * pulse.progress,
-            y: from.y + (to.y - from.y) * pulse.progress,
-          }
-        })
-        .filter(Boolean),
-    [pointsByNode, trafficPulses]
-  )
+  const pulseDots = useMemo(() => {
+    return trafficPulses
+      .map((pulse) => {
+        const from = pointsByNode[pulse.route[pulse.segmentIndex]]
+        const to = pointsByNode[pulse.route[pulse.segmentIndex + 1]]
+        if (!from || !to) return null
+
+        const distance = Math.abs(to.x - from.x)
+        const magic = Math.max(distance * 0.4, 60)
+        
+        const p0 = { x: from.x, y: from.y }
+        const p1 = { x: from.x + magic, y: from.y }
+        const p2 = { x: to.x - magic, y: to.y }
+        const p3 = { x: to.x, y: to.y }
+
+        const pt = getPointOnBezier(p0, p1, p2, p3, pulse.progress)
+
+        return {
+          id: pulse.id,
+          x: pt.x,
+          y: pt.y,
+        }
+      })
+      .filter(Boolean)
+  }, [pointsByNode, trafficPulses])
 
   return (
-    <svg className="pointer-events-none absolute inset-0 h-full w-full">
-      {linkGeometries.map((link, index) => (
-        <g key={link.id}>
-          <line x1={link.x1} y1={link.y1} x2={link.x2} y2={link.y2} className="architecture-link" />
-          {index % 2 === 0 ? <circle r="2.5" cx={link.x2} cy={link.y2} className="architecture-flow-node" /> : null}
-        </g>
-      ))}
+    <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
+      {linkGeometries.map((link, index) => {
+        const pathData = getBezierPath(link.x1, link.y1, link.x2, link.y2)
+        return (
+          <g key={link.id}>
+            <path
+              d={pathData}
+              fill="none"
+              stroke="rgba(120, 220, 255, 0.15)"
+              strokeWidth="1.5"
+              className="transition-all duration-400 ease-out"
+            />
+            {index % 2 === 0 ? <circle r="2.5" cx={link.x2} cy={link.y2} className="architecture-flow-node" /> : null}
+          </g>
+        )
+      })}
       {pulseDots.map((pulse) => (
-        <circle key={pulse.id} r="3" cx={pulse.x} cy={pulse.y} className="architecture-flow-pulse" />
+        <circle key={pulse.id} r="3" cx={pulse.x} cy={pulse.y} fill="#78dcff" className="shadow-[0_0_10px_#78dcff]" />
       ))}
     </svg>
   )
@@ -775,19 +914,24 @@ const ArchitectureNode = memo(function ArchitectureNode({
   databaseStress,
   cacheRelief,
   isVisible,
+  isCrashed = false,
   onPointerDown,
   onMouseEnter,
   onMouseLeave,
 }) {
   const Icon = node.icon
   if (!position) return null
+  
+  const nodeGlowStyle = isCrashed 
+      ? 'shadow-[0_0_20px_rgba(255,86,86,0.55)] border-red-500/80 bg-red-950/40 text-ai-text-primary' 
+      : 'shadow-[0_0_20px_rgba(120,220,255,0.15)] border-ai-border bg-ai-surface/95 text-ai-text-primary'
 
   return (
     <div
       onPointerDown={(event) => onPointerDown(event, node.id)}
       onMouseEnter={() => onMouseEnter(node.id)}
       onMouseLeave={() => onMouseLeave(node.id)}
-      className={`absolute select-none rounded-xl border border-ai-border bg-ai-surface/95 px-3.5 py-2.5 text-ai-text-primary shadow-[0_0_20px_rgba(120,220,255,0.15)] transition duration-[400ms] ease-out ${
+      className={`absolute select-none rounded-xl border px-3.5 py-2.5 transition duration-[400ms] ease-out ${nodeGlowStyle} ${
         isVisible ? 'opacity-100 scale-100' : 'pointer-events-none opacity-0 scale-90'
       }`}
       style={{
@@ -795,31 +939,38 @@ const ArchitectureNode = memo(function ArchitectureNode({
         transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
         touchAction: 'none',
         filter:
-          (node.id === 'database' || node.id === 'dbPrimary') && databaseStress
+          !isCrashed && (node.id === 'database' || node.id === 'dbPrimary') && databaseStress
             ? 'drop-shadow(0 0 10px rgba(255,86,86,0.55))'
-            : loadValue > 85
+            : !isCrashed && loadValue > 85
               ? 'drop-shadow(0 0 10px rgba(255,86,86,0.45))'
-              : loadValue > 60
+              : !isCrashed && loadValue > 60
                 ? 'drop-shadow(0 0 8px rgba(250,204,21,0.4))'
-            : (node.id === 'cache' || node.id === 'queue' || node.id === 'queue2') && cacheRelief
+            : !isCrashed && (node.id === 'cache' || node.id === 'queue' || node.id === 'queue2') && cacheRelief
               ? 'drop-shadow(0 0 10px rgba(34,197,94,0.45))'
             : undefined,
       }}
     >
       <div className="flex items-center gap-2">
-        <Icon className="text-accent" size={15} aria-hidden="true" />
-        <span className="text-xs font-semibold">{node.label}</span>
+         {isCrashed ? (
+             <div className="relative h-4 w-4 text-red-500 opacity-90">
+               <span className="absolute inline-flex h-full w-full animate-[ping_2s_ease-in-out_infinite] rounded-full bg-red-500 opacity-75"></span>
+               <Icon className="relative" size={15} />
+             </div>
+          ) : (
+            <Icon className="text-accent" size={15} aria-hidden="true" />
+          )}
+        <span className={`text-xs font-semibold ${isCrashed ? 'text-red-400' : ''}`}>{node.label}</span>
       </div>
 
-      <div className="mt-2">
+      <div className="mt-2 text-left">
         <div className="mb-1 text-[10px] font-medium text-ai-text-secondary">
-          CPU {Math.round(cpuValue)}% · Lat {Math.round(latencyValue)}ms
+          {isCrashed ? 'ERR' : `CPU ${Math.round(cpuValue)}%`} · {isCrashed ? 'TIMEOUT' : `Lat ${Math.round(latencyValue)}ms`}
         </div>
-        <div className="mb-1 text-[10px] font-medium text-ai-text-secondary">Load: {Math.round(loadValue)}%</div>
+        <div className="mb-1 text-[10px] font-medium text-ai-text-secondary">Load: {isCrashed ? 0 : Math.round(loadValue)}%</div>
         <div className="h-1 w-full overflow-hidden rounded bg-ai-card/70 dark:bg-ai-card/70">
           <div
-            className="h-full rounded bg-accent transition-all duration-[400ms] ease-out"
-            style={{ width: `${Math.min(100, Math.max(0, loadValue))}%` }}
+            className={`h-full rounded transition-all duration-[400ms] ease-out ${isCrashed ? 'bg-red-500' : 'bg-accent'}`}
+            style={{ width: `${isCrashed ? 0 : Math.min(100, Math.max(0, loadValue))}%` }}
           />
         </div>
       </div>
@@ -882,97 +1033,162 @@ function distributeVertical(count, centerY, spacing, height) {
   })
 }
 
-function buildAutoLayout(visibleNodeIds, width, height) {
+function calculateDynamicLayout(visibleNodeIds, containerWidth, containerHeight) {
   const visibleSet = new Set(visibleNodeIds)
   const layout = {}
-  const minHorizontalGap = NODE_WIDTH + 16
-  const minVerticalGap = NODE_HEIGHT + 8
-  const safeQueueSpacing = Math.max(QUEUE_HORIZONTAL_SPACING, minHorizontalGap)
-  const safeReplicaSpacing = Math.max(DB_REPLICA_SPACING, minHorizontalGap)
-  const zoneX = {
-    layer1: width * 0.1,
-    layer2: width * 0.24,
-    layer3: width * 0.36,
-    layer4: width * 0.5,
-    layer5: width * 0.66,
-    layer6: width * 0.82,
+
+  // Minimum architecture width (scrolls horizontally if needed)
+  const effectiveWidth = Math.max(containerWidth, MIN_CANVAS_WIDTH)
+  const startX = 60
+
+  // Standard architectural layers mapping mapping (nodes must strictly follow layers)
+  const layers = {
+    L1: ['client'],
+    L2: ['cdn'],
+    L3: ['loadBalancer', 'loadBalancer2'],
+    L4: ['apiGateway'],
+    L5: ['backend', 'backend1', 'backend2', 'backend3', 'backend4', 'backend5', 'backend6', 'auth'],
+    L6: ['cache', 'queue', 'queue2'],
+    L7: ['workerA', 'workerB'],
+    L8: ['database', 'dbPrimary', 'dbReplica1', 'dbReplica2', 'dbReplica3', 'storage'],
   }
 
-  const placeLayer = (ids, x, spacing = MIN_NODE_SPACING) => {
-    const present = ids.filter((id) => visibleSet.has(id))
-    const ys = distributeVertical(present.length, height * 0.5, Math.max(spacing, minVerticalGap), height)
-    present.forEach((id, idx) => {
-      layout[id] = clampNode({ x: x - NODE_WIDTH / 2, y: ys[idx] }, width, height)
+  // Determine which layers are active
+  const activeLayers = {}
+  Object.entries(layers).forEach(([layerKey, identifiers]) => {
+    activeLayers[layerKey] = identifiers.filter((id) => visibleSet.has(id))
+  })
+
+  // -------------------------------------------------------------
+  // Calculate X offsets (1 column per layer, min 180px gap)
+  // -------------------------------------------------------------
+  const layerX = {}
+  let currentX = startX
+
+  const layerList = ['L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8']
+  layerList.forEach((key) => {
+    if (activeLayers[key].length > 0) {
+      layerX[key] = currentX
+      currentX += LAYER_SPACING + NODE_WIDTH
+    }
+  })
+
+  // Total required canvas width is currentX. If our container is larger, we can center it.
+  const totalGraphWidth = currentX
+  const shiftX = Math.max(0, (effectiveWidth - totalGraphWidth) / 2)
+
+  layerList.forEach((key) => {
+    if (layerX[key] !== undefined) {
+      layerX[key] += shiftX
+    }
+  })
+
+  // -------------------------------------------------------------
+  // PLACEMENT LOGIC
+  // -------------------------------------------------------------
+  
+  // Layer 1 (Client)
+  if (activeLayers.L1.length) {
+    layout[activeLayers.L1[0]] = { x: layerX.L1, y: containerHeight / 2 - NODE_HEIGHT / 2 }
+  }
+
+  // Layer 2 (CDN)
+  if (activeLayers.L2.length) {
+    layout[activeLayers.L2[0]] = { x: layerX.L2, y: containerHeight / 2 - NODE_HEIGHT / 2 }
+  }
+
+  // Layer 3 (Load Balancers - Usually 1 or 2 vertical stack)
+  if (activeLayers.L3.length) {
+    const list = activeLayers.L3
+    const ys = distributeVertical(list.length, containerHeight / 2, Math.max(120, NODE_HEIGHT + 20), containerHeight)
+    list.forEach((id, idx) => {
+      layout[id] = { x: layerX.L3, y: ys[idx] }
     })
   }
 
-  placeLayer(['client', 'cdn'], zoneX.layer1)
-  placeLayer(['loadBalancer', 'loadBalancer2'], zoneX.layer2)
-  placeLayer(['apiGateway'], zoneX.layer3)
-  placeLayer(['auth'], zoneX.layer5)
-
-  const backendNodes = ['backend', 'backend1', 'backend2', 'backend3', 'backend4', 'backend5', 'backend6'].filter((id) =>
-    visibleSet.has(id)
-  )
-  const backendYs = distributeVertical(
-    backendNodes.length,
-    height * 0.5,
-    Math.max(BACKEND_VERTICAL_SPACING, minVerticalGap),
-    height
-  )
-  backendNodes.forEach((id, idx) => {
-    layout[id] = clampNode(
-      { x: zoneX.layer4 - NODE_WIDTH / 2, y: backendYs[idx] },
-      width,
-      height
-    )
-  })
-
-  const infraCluster = ['queue', 'queue2', 'workerA', 'workerB'].filter((id) => visibleSet.has(id))
-  const clusterTotalOffset = Math.max(0, (infraCluster.length - 1) * safeQueueSpacing)
-  const clusterMaxStart = Math.max(0, width - NODE_WIDTH - clusterTotalOffset)
-  const clusterIdealStart = zoneX.layer5 - clusterTotalOffset / 2 - NODE_WIDTH / 2
-  const clusterStartX = Math.max(0, Math.min(clusterMaxStart, clusterIdealStart))
-  const clusterY = Math.min(height - NODE_HEIGHT - 16, height * 0.78)
-  infraCluster.forEach((id, idx) => {
-    layout[id] = clampNode(
-      { x: clusterStartX + idx * safeQueueSpacing, y: clusterY },
-      width,
-      height
-    )
-  })
-
-  if (visibleSet.has('cache')) {
-    layout.cache = clampNode(
-      { x: zoneX.layer5 - NODE_WIDTH / 2, y: height * 0.36 - NODE_HEIGHT / 2 },
-      width,
-      height
-    )
+  // Layer 4 (API Gateway)
+  if (activeLayers.L4.length) {
+    layout[activeLayers.L4[0]] = { x: layerX.L4, y: containerHeight / 2 - NODE_HEIGHT / 2 }
   }
 
-  const primaryDb = visibleSet.has('dbPrimary') ? 'dbPrimary' : visibleSet.has('database') ? 'database' : null
-  const replicas = ['dbReplica1', 'dbReplica2', 'dbReplica3', 'storage'].filter((id) => visibleSet.has(id))
-  const dbGroupCount = (primaryDb ? 1 : 0) + replicas.length
-  const dbTotalOffset = Math.max(0, (dbGroupCount - 1) * safeReplicaSpacing)
-  const dbMaxStart = Math.max(0, width - NODE_WIDTH - dbTotalOffset)
-  const dbIdealStart = zoneX.layer6 - NODE_WIDTH / 2 - dbTotalOffset * 0.35
-  const dbStartX = Math.max(0, Math.min(dbMaxStart, dbIdealStart))
-
-  if (primaryDb) {
-    layout[primaryDb] = clampNode(
-      { x: dbStartX, y: height * 0.5 - NODE_HEIGHT / 2 },
-      width,
-      height
+  // Layer 5 (Backend Stack - Vertical)
+  if (activeLayers.L5.length) {
+    const backendNodes = activeLayers.L5.filter(id => id !== 'auth')
+    const ys = distributeVertical(
+      backendNodes.length,
+      containerHeight / 2,
+      BACKEND_VERTICAL_SPACING,
+      containerHeight
     )
+    backendNodes.forEach((id, idx) => {
+      layout[id] = { x: layerX.L5, y: ys[idx] }
+    })
+    
+    // Auth node sits separately
+    if (visibleSet.has('auth')) {
+       layout['auth'] = { x: layerX.L5, y: containerHeight * 0.15 }
+    }
   }
 
-  replicas.forEach((id, idx) => {
-    const x = dbStartX + safeReplicaSpacing * (idx + (primaryDb ? 1 : 0))
-    const y = height * 0.5 - NODE_HEIGHT / 2
-    layout[id] = clampNode({ x, y }, width, height)
+  // Layer 6 (Cache & Message Queues - Vertical Stack)
+  if (activeLayers.L6.length) {
+    const cacheIndex = activeLayers.L6.indexOf('cache')
+    const queues = activeLayers.L6.filter(id => id.startsWith('queue'))
+
+    if (cacheIndex !== -1) {
+       // Cache usually sits higher up
+       layout['cache'] = { x: layerX.L6, y: containerHeight / 3 - NODE_HEIGHT / 2 }
+    }
+    
+    // Distribute Queues lower
+    if(queues.length) {
+       const qsYs = distributeVertical(queues.length, containerHeight * 0.65, QUEUE_HORIZONTAL_SPACING, containerHeight)
+       queues.forEach((id, idx) => {
+          layout[id] = { x: layerX.L6, y: qsYs[idx] }
+       })
+    }
+  }
+
+  // Layer 7 (Workers - Horizontal stack, but we stick them horizontally due to layer layout logic)
+  if (activeLayers.L7.length) {
+    const workers = activeLayers.L7
+    const workerY = containerHeight * 0.78
+    
+    workers.forEach((id, idx) => {
+      layout[id] = { x: layerX.L7 + (idx * WORKER_HORIZONTAL_SPACING * 0.6), y: workerY + (idx % 2 === 0 ? 0 : 40) }
+    })
+  }
+
+  // Layer 8 (Databases - Horizontal Spread)
+  if (activeLayers.L8.length) {
+    const dbs = activeLayers.L8.filter(id => id !== 'storage')
+    const storageNode = activeLayers.L8.find(id => id === 'storage')
+    
+    // Primary DB is centered if exists
+    const primaryDb = visibleSet.has('dbPrimary') ? 'dbPrimary' : visibleSet.has('database') ? 'database' : null
+    const replicas = dbs.filter(id => id !== primaryDb)
+
+    const dbBaseY = containerHeight / 2 - NODE_HEIGHT / 2
+    
+    if (primaryDb) {
+      layout[primaryDb] = { x: layerX.L8, y: dbBaseY }
+    }
+
+    replicas.forEach((id, idx) => {
+      layout[id] = { x: layerX.L8 + DB_REPLICA_SPACING * (idx + (primaryDb ? 1 : 0)*0.7), y: dbBaseY + (idx*40) } // Slight waterfall layout
+    })
+
+    if (storageNode) {
+       layout[storageNode] = { x: layerX.L8, y: containerHeight * 0.8 }
+    }
+  }
+
+  // Clamp everything strictly so it does NOT overflow vertically at any point
+  Object.keys(layout).forEach(nodeId => {
+     layout[nodeId] = clampNode(layout[nodeId], 4000, containerHeight)
   })
 
-  return layout
+  return { layout, virtualWidth: totalGraphWidth }
 }
 
 export function SystemArchitecturePlayground() {
@@ -983,6 +1199,7 @@ export function SystemArchitecturePlayground() {
   const attackRafRef = useRef(0)
   const dragEventRef = useRef(null)
   const draggingRef = useRef(null)
+  const canvasDragRef = useRef(null)
   const nodePositionsRef = useRef({})
   const lastEvolutionSwitchRef = useRef(0)
   const pulseIdRef = useRef(0)
@@ -991,6 +1208,10 @@ export function SystemArchitecturePlayground() {
   const [nodePositions, setNodePositions] = useState({})
   const [hoveredNode, setHoveredNode] = useState(null)
   const [evolutionEnabled, setEvolutionEnabled] = useState(false)
+  
+  // Canvas State: Pan & Zoom
+  const [panZoom, setPanZoom] = useState({ x: 0, y: 0, scale: 1 })
+  const [isPanning, setIsPanning] = useState(false)
   const [stageIndex, setStageIndex] = useState(0)
   const [trafficPulses, setTrafficPulses] = useState([])
   const [nodeLoad, setNodeLoad] = useState({})
@@ -1009,6 +1230,13 @@ export function SystemArchitecturePlayground() {
   const [attackStageIndex, setAttackStageIndex] = useState(0)
   const [attackDone, setAttackDone] = useState(false)
   const [attackIntensity, setAttackIntensity] = useState(1)
+  
+  // Feature: Chaos Monkey & Fullscreen
+  const [failureMode, setFailureMode] = useState(false)
+  const [failureStageIndex, setFailureStageIndex] = useState(0)
+  const [failureDone, setFailureDone] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [tooltipPosition, setTooltipPosition] = useState(null)
 
   useEffect(() => {
     const element = containerRef.current
@@ -1027,9 +1255,10 @@ export function SystemArchitecturePlayground() {
   const applyLayout = (layout, visibleIds = null) => {
     if (!containerSize.width || !containerSize.height) return
     const next = { ...nodePositionsRef.current }
-    const autoLayout = visibleIds
-      ? buildAutoLayout(visibleIds, containerSize.width, containerSize.height)
+    const dynamicResult = visibleIds
+      ? calculateDynamicLayout(visibleIds, containerSize.width, containerSize.height)
       : null
+    const autoLayout = dynamicResult ? dynamicResult.layout : null
 
     ALL_NODES.forEach((node) => {
       const target = autoLayout?.[node.id] || (layout[node.id] ? toPixelPosition(layout[node.id], containerSize.width, containerSize.height) : null)
@@ -1179,17 +1408,46 @@ export function SystemArchitecturePlayground() {
   }, [attackMode])
 
   useEffect(() => {
-    if (!scaleDone && !attackDone) return undefined
+    if (!failureMode) return undefined
+
+    let lastSwitch = performance.now()
+    const tick = (now) => {
+      const waitTime = failureStageIndex === FAILURE_STAGES.length - 1 ? 3000 : 2000
+      if (now - lastSwitch >= waitTime) {
+        setFailureStageIndex((prev) => {
+          const next = prev + 1
+          if (next >= FAILURE_STAGES.length) {
+            setFailureMode(false)
+            setFailureDone(true)
+            return prev
+          }
+          return next
+        })
+        lastSwitch = now
+      }
+      if (failureMode) {
+        requestAnimationFrame(tick)
+      }
+    }
+
+    const rafId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId)
+  }, [failureMode, failureStageIndex])
+
+  useEffect(() => {
+    if (!scaleDone && !attackDone && !failureDone) return undefined
     const timer = setTimeout(() => {
       setScaleDone(false)
       setAttackDone(false)
+      setFailureDone(false)
     }, 5000)
     return () => clearTimeout(timer)
-  }, [attackDone, scaleDone])
+  }, [attackDone, scaleDone, failureDone])
 
   const activeScaleStage = scaleMode || scaleDone ? SCALE_STAGES[scaleStageIndex] : null
   const activeAttackStage = attackMode || attackDone ? ATTACK_STAGES[attackStageIndex] : null
-  const activeScenarioStage = activeAttackStage || activeScaleStage
+  const activeFailureStage = failureMode || failureDone ? FAILURE_STAGES[failureStageIndex] : null
+  const activeScenarioStage = activeFailureStage || activeAttackStage || activeScaleStage
 
   const visibleNodeIds = useMemo(() => {
     if (activeScenarioStage) return new Set(activeScenarioStage.visible)
@@ -1200,6 +1458,11 @@ export function SystemArchitecturePlayground() {
     if (activeScenarioStage) return activeScenarioStage.connections
     return BASE_CONNECTIONS
   }, [activeScenarioStage])
+
+  const crashedNodesSet = useMemo(() => {
+    if (activeFailureStage) return new Set(activeFailureStage.crashedNodes || [])
+    return new Set()
+  }, [activeFailureStage])
 
   const centers = useMemo(() => {
     const map = {}
@@ -1268,12 +1531,12 @@ export function SystemArchitecturePlayground() {
       lastTick = now
 
       const spiking = now < spikeUntil
-      if (now > nextSpikeAt && !spiking) {
+      if (now > nextSpikeAt && !spiking && !failureMode) {
         spikeUntil = now + 3200
         nextSpikeAt = now + 9000 + Math.random() * 7000
       }
 
-      setDatabaseStress(spiking)
+      setDatabaseStress(spiking || (activeFailureStage && activeFailureStage.label !== 'recovering'))
 
       const scaleProfile = activeScenarioStage
       spawnAccumulator += dt
@@ -1369,14 +1632,22 @@ export function SystemArchitecturePlayground() {
   }, [attackIntensity])
 
   const handlePointerDown = (event, id) => {
+    // Only capture node drag events when the mouse targets the actual node
     const position = nodePositions[id]
     if (!position || !containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
+    
+    // Convert absolute screen clientX/clientY down to the correct transformed coordinate space
+    const { x: px, y: py, scale } = panZoom
+    
     draggingRef.current = {
       id,
-      offsetX: event.clientX - rect.left - position.x,
-      offsetY: event.clientY - rect.top - position.y,
+      offsetX: (event.clientX - rect.left - px) / scale - position.x,
+      offsetY: (event.clientY - rect.top - py) / scale - position.y,
     }
+    
+    // Prevent the canvas pan listener from firing
+    event.stopPropagation()
   }
 
   const startScaleSimulation = () => {
@@ -1397,26 +1668,85 @@ export function SystemArchitecturePlayground() {
     setScaleDone(false)
     setScaleStageIndex(0)
     setStageIndex(0)
+    setFailureMode(false)
+    setFailureDone(false)
     setAttackDone(false)
     setAttackMode(true)
     setAttackStageIndex(0)
     applyLayout(ATTACK_STAGES[0].layout, ATTACK_STAGES[0].visible)
   }
 
-  const tooltipPosition = useMemo(() => {
-    if (!hoveredNode || !containerRef.current) return null
+  const startFailureSimulation = () => {
+    setEvolutionEnabled(false)
+    setScaleMode(false)
+    setScaleDone(false)
+    setScaleStageIndex(0)
+    setStageIndex(0)
+    setAttackDone(false)
+    setAttackMode(false)
+    setFailureDone(false)
+    setFailureMode(true)
+    setFailureStageIndex(0)
+    applyLayout(FAILURE_STAGES[0].layout, FAILURE_STAGES[0].visible)
+  }
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement && containerRef.current) {
+      containerRef.current.requestFullscreen().catch((err) => {
+        console.warn(`Error attempting to enable fullscreen: ${err.message}`)
+      })
+    } else if (document.fullscreenElement) {
+      document.exitFullscreen()
+    }
+  }
+
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+    document.addEventListener('fullscreenchange', onFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', onFullscreenChange)
+  }, [])
+
+  useEffect(() => {
+    if (!hoveredNode) {
+      setTooltipPosition(null)
+      return
+    }
+
     const pos = nodePositions[hoveredNode]
-    if (!pos) return null
-    const rect = containerRef.current.getBoundingClientRect()
-    return {
-      x: rect.left + pos.x + NODE_WIDTH / 2,
-      y: rect.top + pos.y - 10,
+    const container = containerRef.current
+    if (!pos || !container) {
+      setTooltipPosition(null)
+      return
+    }
+
+    const updateTooltipPosition = () => {
+      const rect = container.getBoundingClientRect()
+      setTooltipPosition({
+        x: rect.left + pos.x + NODE_WIDTH / 2,
+        y: rect.top + pos.y - 10,
+      })
+    }
+
+    updateTooltipPosition()
+    window.addEventListener('scroll', updateTooltipPosition, true)
+    window.addEventListener('resize', updateTooltipPosition)
+
+    return () => {
+      window.removeEventListener('scroll', updateTooltipPosition, true)
+      window.removeEventListener('resize', updateTooltipPosition)
     }
   }, [hoveredNode, nodePositions])
 
   const hoveredNodeData = hoveredNode ? NODE_MAP[hoveredNode] : null
-  const systemStatus =
-    attackMode || averageLoad > 78 ? 'High Load' : averageLoad > 60 ? 'Stabilizing' : 'Healthy'
+  const systemStatus = failureMode 
+    ? (failureStageIndex === FAILURE_STAGES.length - 1 ? 'Recovering' : 'Failure Detected')
+    : attackMode || averageLoad > 78 
+      ? 'High Load' 
+      : averageLoad > 60 
+        ? 'Stabilizing' 
+        : 'Healthy'
 
   return (
     <section
@@ -1467,10 +1797,18 @@ export function SystemArchitecturePlayground() {
             <button
               type="button"
               onClick={startAttackSimulation}
-              disabled={attackMode || scaleMode}
+              disabled={attackMode || scaleMode || failureMode}
               className="rounded-full border border-ai-border bg-ai-card/70 px-4 py-2 text-xs font-medium text-ai-text-secondary transition hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-60 dark:border-ai-border dark:bg-ai-card/70 dark:text-ai-text-secondary"
             >
               Traffic Attack Simulator
+            </button>
+            <button
+              type="button"
+              onClick={startFailureSimulation}
+              disabled={attackMode || scaleMode || failureMode}
+              className="rounded-full border border-ai-border bg-ai-card/70 px-4 py-2 text-xs font-medium text-ai-text-secondary transition hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-60 dark:border-ai-border dark:bg-ai-card/70 dark:text-ai-text-secondary"
+            >
+              Failure Injection Mode
             </button>
           </div>
         </Reveal>
@@ -1502,34 +1840,91 @@ export function SystemArchitecturePlayground() {
         </Reveal>
 
         <Reveal>
-          <div
-            ref={containerRef}
-            className="relative mx-auto h-[560px] w-full max-w-[1080px] overflow-visible rounded-2xl border border-ai-border bg-ai-card/35"
-          >
-            <div className="pointer-events-none absolute right-3 top-3 z-20 rounded-full border border-ai-border bg-ai-surface/90 px-3 py-1 text-[11px] font-medium text-ai-text-secondary backdrop-blur">
-              System Status: {systemStatus}
-            </div>
-            <ArchitectureLinks linkGeometries={linkGeometries} trafficPulses={trafficPulses} />
+          <div 
+            className="w-full pb-8 select-none"
+            onWheel={(e) => {
+              // Zoom logic (Ctrl+Scroll or standard wheel depending on trackpad)
+              // Only prevent scrolling if over canvas (to avoid page lock when scrolling down outside)
+              if (containerRef.current && containerRef.current.contains(e.target)) {
+                 e.preventDefault()
+                 const zoomSensitivity = 0.002
+                 const delta = -e.deltaY * zoomSensitivity
+                 
+                 setPanZoom(prev => {
+                   const newScale = Math.min(1.6, Math.max(0.6, prev.scale * (1 + delta)))
+                   
+                   // Calculate zoom origin relative to the container instead of screen
+                   const rect = containerRef.current.getBoundingClientRect()
+                   const mouseX = e.clientX - rect.left
+                   const mouseY = e.clientY - rect.top
 
-            {ALL_NODES.map((node) => {
-              const position = nodePositions[node.id]
-              return (
-                <ArchitectureNode
-                  key={node.id}
-                  node={node}
-                  position={position}
-                  loadValue={nodeLoad[node.id] ?? 0}
-                  cpuValue={Math.max(10, Math.min(98, (nodeLoad[node.id] ?? 0) * 0.82))}
-                  latencyValue={Math.max(40, 60 + (nodeLoad[node.id] ?? 0) * 2.3)}
-                  databaseStress={databaseStress}
-                  cacheRelief={attackMode || (activeScenarioStage && activeScenarioStage.label === '10m')}
-                  isVisible={visibleNodeIds.has(node.id)}
-                  onPointerDown={handlePointerDown}
-                  onMouseEnter={setHoveredNode}
-                  onMouseLeave={(id) => setHoveredNode((value) => (value === id ? null : value))}
-                />
-              )
-            })}
+                   // Adjust pan so the zoom is centered on the cursor
+                   const newX = mouseX - (mouseX - prev.x) * (newScale / prev.scale)
+                   const newY = mouseY - (mouseY - prev.y) * (newScale / prev.scale)
+
+                   return { x: newX, y: newY, scale: newScale }
+                 })
+              }
+            }}
+            onPointerDown={(e) => {
+              if (e.target.closest('.architecture-node-card')) return // Ignores nodes
+              setIsPanning(true)
+              canvasDragRef.current = { startX: e.clientX, startY: e.clientY, initPanX: panZoom.x, initPanY: panZoom.y }
+            }}
+            onPointerMove={(e) => {
+               if (isPanning && canvasDragRef.current) {
+                 const dx = e.clientX - canvasDragRef.current.startX
+                 const dy = e.clientY - canvasDragRef.current.startY
+                 setPanZoom(prev => ({
+                   ...prev,
+                   x: canvasDragRef.current.initPanX + dx,
+                   y: canvasDragRef.current.initPanY + dy
+                 }))
+               }
+            }}
+            onPointerUp={() => setIsPanning(false)}
+            onPointerLeave={() => setIsPanning(false)}
+            onDoubleClick={() => setPanZoom({ x: 0, y: 0, scale: 1 })}
+          >
+            <div
+              ref={containerRef}
+              className={`relative mx-auto h-[700px] w-full max-w-[2200px] overflow-hidden rounded-2xl border border-ai-border bg-ai-card/35 transition-all duration-700 ease-in-out ${isPanning ? 'cursor-grabbing' : 'cursor-grab'}`}
+              style={{ touchAction: 'none' }}
+            >
+              <div className="pointer-events-none absolute left-3 top-3 z-20 w-fit rounded-full border border-ai-border bg-ai-surface/90 px-3 py-1 text-[11px] font-medium text-ai-text-secondary backdrop-blur">
+                System Status: {systemStatus}
+              </div>
+              
+              <div 
+                className="absolute inset-0 origin-top-left"
+                style={{
+                  transform: `translate3d(${panZoom.x}px, ${panZoom.y}px, 0) scale(${panZoom.scale})`,
+                  willChange: 'transform'
+                }}
+              >
+                <ArchitectureLinks linkGeometries={linkGeometries} trafficPulses={trafficPulses} />
+
+                {ALL_NODES.map((node) => {
+                  const position = nodePositions[node.id]
+                  return (
+                    <ArchitectureNode
+                      key={node.id}
+                      node={node}
+                      position={position}
+                        loadValue={nodeLoad[node.id] ?? 0}
+                      cpuValue={Math.max(10, Math.min(98, (nodeLoad[node.id] ?? 0) * 0.82))}
+                      latencyValue={Math.max(40, 60 + (nodeLoad[node.id] ?? 0) * 2.3)}
+                      databaseStress={databaseStress}
+                      cacheRelief={attackMode || (activeScenarioStage && activeScenarioStage.label === '10m')}
+                      isVisible={visibleNodeIds.has(node.id)}
+                      isCrashed={crashedNodesSet.has(node.id)}
+                      onPointerDown={handlePointerDown}
+                      onMouseEnter={setHoveredNode}
+                      onMouseLeave={(id) => setHoveredNode((value) => (value === id ? null : value))}
+                    />
+                  )
+                })}
+              </div>
 
             {scaleDone ? (
               <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-ai-border bg-ai-surface/90 px-4 py-1.5 text-xs font-medium text-ai-text-secondary shadow-[0_0_16px_rgba(120,220,255,0.2)] backdrop-blur">
@@ -1541,7 +1936,17 @@ export function SystemArchitecturePlayground() {
                 System auto-scaled successfully.
               </div>
             ) : null}
+            
+            {/* Fullscreen Toggle Button */}
+            <button
+              onClick={toggleFullscreen}
+              className="absolute bottom-4 right-4 z-30 flex h-10 w-10 items-center justify-center rounded-full border border-ai-border bg-ai-surface/90 text-ai-text-secondary shadow-[0_0_15px_rgba(120,220,255,0.08)] backdrop-blur transition-all hover:bg-ai-card hover:text-ai-text-primary hover:shadow-[0_0_20px_rgba(120,220,255,0.2)] active:scale-95"
+              title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+            >
+               {isFullscreen ? <FaCompress size={16} /> : <FaExpand size={16} />}
+            </button>
           </div>
+        </div>
         </Reveal>
       </div>
       <TooltipPortal node={hoveredNodeData} position={tooltipPosition} />

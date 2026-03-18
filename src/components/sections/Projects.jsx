@@ -1,58 +1,58 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { FiExternalLink, FiGithub, FiX } from 'react-icons/fi'
-import { Reveal } from '../ui/Reveal'
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiExternalLink, FiGithub, FiX } from "react-icons/fi";
+import { Reveal } from "../ui/Reveal";
 
 const projects = [
   {
-    id: 'packet-analyzer',
-    title: 'Network Packet Analyzer',
+    id: "packet-analyzer",
+    title: "Network Packet Analyzer",
     description:
-      'A Java-based tool for inspecting and analyzing network packets, helping understand protocols and low-level data flow.',
-    tech: ['Java', 'Sockets', 'Networking'],
-    github: 'https://github.com/your-username/packet-analyzer',
-    demo: '#',
-    images: ['/previews/packet-1.png', '/previews/packet-2.png'],
+      "A Java-based tool for inspecting and analyzing network packets, helping understand protocols and low-level data flow.",
+    tech: ["Java", "Sockets", "Networking"],
+    github: "https://github.com/your-username/packet-analyzer",
+    demo: "#",
+    images: ["/previews/packet-1.svg", "/previews/packet-2.svg"],
   },
   {
-    id: 'backend-api',
-    title: 'Clean Backend API',
+    id: "backend-api",
+    title: "Clean Backend API",
     description:
-      'REST API with layered architecture, input validation, and clear separation of concerns for maintainable backend services.',
-    tech: ['Java', 'REST', 'Design Patterns'],
-    github: 'https://github.com/your-username/backend-api',
-    demo: '#',
-    images: ['/previews/backend-1.png', '/previews/backend-2.png'],
+      "REST API with layered architecture, input validation, and clear separation of concerns for maintainable backend services.",
+    tech: ["Java", "REST", "Design Patterns"],
+    github: "https://github.com/your-username/backend-api",
+    demo: "#",
+    images: ['/previews/backend-1.svg', '/previews/backend-2.svg'],
   },
   {
-    id: 'dsa-visualizer',
-    title: 'DSA Visualizer',
+    id: "dsa-visualizer",
+    title: "DSA Visualizer",
     description:
-      'Interactive visualizations for data structures and algorithms to build deeper intuition while solving problems.',
-    tech: ['JavaScript', 'HTML', 'CSS'],
-    github: 'https://github.com/your-username/dsa-visualizer',
-    demo: '#',
-    images: ['/previews/dsa-1.png', '/previews/dsa-2.png'],
+      "Interactive visualizations for data structures and algorithms to build deeper intuition while solving problems.",
+    tech: ["JavaScript", "HTML", "CSS"],
+    github: "https://github.com/your-username/dsa-visualizer",
+    demo: "#",
+    images: ['/previews/dsa-1.svg', '/previews/dsa-2.svg'],
   },
-]
+];
 
 export function Projects() {
-  const [active, setActive] = useState(null)
-  const [imageIndex, setImageIndex] = useState(0)
+  const [active, setActive] = useState(null);
+  const [imageIndex, setImageIndex] = useState(0);
 
   const openModal = (project) => {
-    setActive(project)
-    setImageIndex(0)
-  }
+    setActive(project);
+    setImageIndex(0);
+  };
 
   const closeModal = () => {
-    setActive(null)
-  }
+    setActive(null);
+  };
 
   const nextImage = () => {
-    if (!active) return
-    setImageIndex((prev) => (prev + 1) % active.images.length)
-  }
+    if (!active) return;
+    setImageIndex((prev) => (prev + 1) % active.images.length);
+  };
 
   return (
     <section
@@ -70,27 +70,29 @@ export function Projects() {
               Selected work with a backend mindset.
             </h2>
             <p className="max-w-xl text-sm text-ai-text-secondary dark:text-ai-text-secondary">
-              A mix of systems-oriented projects and learning experiments that focus on clarity,
-              structure, and performance.
+              A mix of systems-oriented projects and learning experiments that
+              focus on clarity, structure, and performance.
             </p>
           </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
           {projects.map((project, index) => (
-            <Reveal
-              key={project.id}
-              delay={index * 0.08}
-            >
+            <Reveal key={project.id} delay={index * 0.08}>
               <article
                 className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-ai-border bg-ai-card/80 shadow-sm shadow-slate-900/5 backdrop-blur transition hover:-translate-y-2 hover:border-ai-violet/30 hover:shadow-lg hover:shadow-[0_0_20px_rgba(34,211,238,0.25)] dark:border-ai-border dark:bg-ai-card/80"
                 onClick={() => openModal(project)}
               >
                 <div className="relative h-40 overflow-hidden bg-ai-surface/60 dark:bg-ai-surface/60">
+                  <img 
+                    src={project.images[0]} 
+                    alt={`${project.title} preview`}
+                    className="h-full w-full object-cover"
+                  />
                   <motion.div
                     whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.5, ease: 'easeOut' }}
-                    className="flex h-full items-center justify-center text-xs font-medium uppercase tracking-[0.25em] text-ai-text-secondary dark:text-ai-text-secondary"
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    className="absolute inset-0 flex items-center justify-center bg-ai-navy/60 text-xs font-medium uppercase tracking-[0.25em] text-ai-text-secondary dark:text-ai-text-secondary"
                   >
                     Project Preview
                   </motion.div>
@@ -142,7 +144,7 @@ export function Projects() {
               initial={{ opacity: 0, y: 24, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.98 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
               className="relative max-h-[80vh] w-full max-w-3xl overflow-hidden rounded-3xl border border-ai-border bg-ai-card/90 p-5 shadow-2xl"
             >
               <button
@@ -157,10 +159,11 @@ export function Projects() {
               <div className="flex flex-col gap-5 md:flex-row">
                 <div className="md:w-2/3">
                   <div className="relative h-52 overflow-hidden rounded-2xl bg-ai-surface">
-                    <div className="absolute inset-0 bg-gradient-to-tr from-accent/40 via-sky-500/20 to-emerald-400/20" />
-                    <div className="relative flex h-full items-center justify-center text-xs font-medium uppercase tracking-[0.25em] text-ai-text-primary">
-                      Image {imageIndex + 1} / {active.images.length}
-                    </div>
+                    <img 
+                      src={active.images[imageIndex]} 
+                      alt={`${active.title} preview ${imageIndex + 1}`}
+                      className="h-full w-full object-contain"
+                    />
                   </div>
                   {active.images.length > 1 && (
                     <button
@@ -177,8 +180,12 @@ export function Projects() {
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-accent-soft">
                     Project
                   </p>
-                  <h3 className="text-lg font-semibold text-ai-text-primary">{active.title}</h3>
-                  <p className="text-xs text-ai-text-secondary">{active.description}</p>
+                  <h3 className="text-lg font-semibold text-ai-text-primary">
+                    {active.title}
+                  </h3>
+                  <p className="text-xs text-ai-text-secondary">
+                    {active.description}
+                  </p>
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-ai-text-secondary">
                       Tech Breakdown
@@ -222,5 +229,5 @@ export function Projects() {
         )}
       </AnimatePresence>
     </section>
-  )
+  );
 }

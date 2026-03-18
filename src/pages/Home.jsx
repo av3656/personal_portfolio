@@ -10,6 +10,8 @@ import { Contact } from '../components/sections/Contact'
 import { SectionMotionDivider } from '../components/ui/SectionMotionDivider'
 import { usePageMeta } from '../hooks/usePageMeta'
 
+const SHOW_ARCHITECTURE_PLAYGROUND = false
+
 export function Home() {
   usePageMeta('Home', 'Portfolio landing page with intro, CTA, and overview.')
   return (
@@ -21,9 +23,13 @@ export function Home() {
       <Skills />
       <SectionMotionDivider />
       <TechStack />
-      <SectionMotionDivider />
-      <SystemArchitecturePlayground />
-      <SectionMotionDivider />
+      {SHOW_ARCHITECTURE_PLAYGROUND ? (
+        <>
+          <SectionMotionDivider />
+          <SystemArchitecturePlayground />
+          <SectionMotionDivider />
+        </>
+      ) : null}
       <Projects />
       <SectionMotionDivider />
       <Experience />
